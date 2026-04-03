@@ -42,7 +42,9 @@ export function MarketHeader() {
         </div>
         <div className="market-stat">
           <span className="market-stat-label">Open Interest</span>
-          <span className="market-stat-value">{stats ? formatUsd(stats.openInterest) : '—'}</span>
+          <span className="market-stat-value">
+            {stats ? formatUsd((parseFloat(stats.openInterest) * parseFloat(stats.markPx)).toString()) : '—'}
+          </span>
         </div>
       </div>
     </div>

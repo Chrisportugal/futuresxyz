@@ -1669,6 +1669,32 @@ body {
 .page-title { font-size: 20px; font-weight: 700; color: var(--text-0); margin-bottom: 20px; }
 .page-empty { text-align: center; padding: 60px 20px; color: var(--text-3); font-size: 14px; }
 
+/* ─── Order Confirmation Modal ─── */
+.ocm-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  z-index: 1100; display: flex; align-items: center; justify-content: center;
+}
+.ocm-card {
+  background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius);
+  width: 380px; max-width: 90vw; padding: 20px; box-shadow: var(--shadow);
+}
+.ocm-title { font-size: 16px; font-weight: 700; color: var(--text-0); margin-bottom: 16px; }
+.ocm-rows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.ocm-row { display: flex; justify-content: space-between; font-size: 13px; }
+.ocm-row span:first-child { color: var(--text-3); }
+.ocm-row span:last-child { color: var(--text-0); font-weight: 500; font-family: 'Inter', monospace; }
+.ocm-divider { height: 1px; background: var(--border); margin: 4px 0; }
+.ocm-buttons { display: flex; gap: 8px; }
+.ocm-btn {
+  flex: 1; padding: 10px; border: none; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font);
+}
+.ocm-btn-cancel { background: var(--bg-3); color: var(--text-2); }
+.ocm-btn-cancel:hover { background: var(--bg-4); }
+.ocm-btn-confirm.buy { background: var(--green); color: #fff; }
+.ocm-btn-confirm.sell { background: var(--red); color: #fff; }
+.ocm-btn-confirm:hover { opacity: 0.9; }
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }

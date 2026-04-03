@@ -68,12 +68,20 @@ export function MarketSelector() {
 
   const currentMarket = markets.find(m => m.name === selectedMarket)
 
+  // Close on Escape
   useEffect(() => {
     if (!open) return
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
     document.addEventListener('keydown', handleKey)
     return () => document.removeEventListener('keydown', handleKey)
   }, [open])
+
+  // Open via Cmd+K keyboard shortcut
+  useEffect(() => {
+    const handler = () => setOpen(true)
+    window.addEventListener('open-market-selector', handler)
+    return () => window.removeEventListener('open-market-selector', handler)
+  }, [])
 
   const handleSort = useCallback((field: SortField) => {
     if (sortField === field) setSortDir(d => d === 'asc' ? 'desc' : 'asc')

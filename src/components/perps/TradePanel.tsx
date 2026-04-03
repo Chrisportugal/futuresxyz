@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useAccount } from 'wagmi'
 import { useMarket } from '../../contexts/MarketContext'
 import { useMarketMeta } from '../../hooks/useMarketMeta'
 import { useUserState } from '../../hooks/useUserState'
 import { usePlaceOrder, type OrderSide, type OrderType, type Tif } from '../../hooks/usePlaceOrder'
+import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
+import { OrderConfirmModal } from './OrderConfirmModal'
 import { formatPrice, formatUsd } from '../../lib/format'
 
 const SIZE_MARKS = [0, 25, 50, 75, 100]
@@ -26,6 +28,14 @@ export function TradePanel() {
   const [tpPrice, setTpPrice] = useState('')
   const [slPrice, setSlPrice] = useState('')
   const [sizePct, setSizePct] = useState(0)
+  const [showConfirm, setShowConfirm] = useState(false)
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts({
+    setSide,
+    setOrderType,
+    onEscape: useCallback(() => setShowConfirm(false), []),
+  })
 
   const market = markets.find(m => m.name === selectedMarket)
   const midPrice = market ? parseFloat(market.midPrice) : 0
@@ -256,7 +266,10 @@ export function TradePanel() {
       ) : (
         <button
           className={`trade-submit ${side}`}
-          onClick={handleSubmit}
+          onClick={() => {
+            if (!size || sizeNum <= 0) return
+            setShowConfirm(true)
+          }}
           disabled={placing || !size || sizeNum <= 0}
         >
           {placing ? 'Placing...' : side === 'buy' ? 'Long' : 'Short'}
@@ -264,6 +277,23 @@ export function TradePanel() {
       )}
 
       {error && <div className="trade-error">{error}</div>}
+
+      {/* Order Confirmation Modal */}
+      {showConfirm && (
+        <OrderConfirmModal
+          market={selectedMarket}
+          side={side}
+          size={size}
+          price={priceNum}
+          leverage={leverage}
+          orderType={orderType}
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={() => {
+            setShowConfirm(false)
+            handleSubmit()
+          }}
+        />
+      )}
 
       {/* Balance Summary */}
       {isConnected && state && (

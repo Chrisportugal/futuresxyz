@@ -250,13 +250,6 @@ export function TradePanel() {
         </div>
       )}
 
-      {/* Order Summary */}
-      <div className="tp-summary">
-        <div className="tp-summary-row"><span>Subtotal</span><span>{orderValue > 0 ? formatUsd(orderValue) : '--'}</span></div>
-        <div className="tp-summary-row"><span>Fee</span><span>{estFee > 0 ? formatUsd(estFee) : '--'}</span></div>
-        <div className="tp-summary-row tp-summary-total"><span>Total</span><span>{orderValue > 0 ? formatUsd(orderValue + estFee) : '--'}</span></div>
-      </div>
-
       {/* Submit */}
       {!isConnected ? (
         <div className="connect-prompt">Connect wallet to trade</div>
@@ -269,8 +262,8 @@ export function TradePanel() {
           {approving ? 'Approving...' : 'Enable Trading (one-time signature)'}
         </button>
       ) : available <= 0 ? (
-        <button className="trade-submit add-funds" disabled>
-          Add funds to continue
+        <button className="trade-submit add-funds">
+          Not Enough Margin
         </button>
       ) : (
         <button
@@ -281,9 +274,33 @@ export function TradePanel() {
           }}
           disabled={placing || !size || sizeNum <= 0}
         >
-          {placing ? 'Placing...' : side === 'buy' ? 'Long' : 'Short'}
+          {placing ? 'Placing...' : side === 'buy' ? 'Buy / Long' : 'Sell / Short'}
         </button>
       )}
+
+      {/* Order details — like Hyperliquid */}
+      <div className="tp-summary">
+        <div className="tp-summary-row">
+          <span>Liquidation Price</span>
+          <span>{orderValue > 0 ? `$${(priceNum * (side === 'buy' ? (1 - 0.9 / leverage) : (1 + 0.9 / leverage))).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : 'N/A'}</span>
+        </div>
+        <div className="tp-summary-row">
+          <span>Order Value</span>
+          <span>{orderValue > 0 ? formatUsd(orderValue) : 'N/A'}</span>
+        </div>
+        <div className="tp-summary-row">
+          <span>Margin Required</span>
+          <span>{orderValue > 0 ? formatUsd(orderValue / leverage) : 'N/A'}</span>
+        </div>
+        <div className="tp-summary-row">
+          <span>Slippage</span>
+          <span>Est: 0% / Max: 8.00%</span>
+        </div>
+        <div className="tp-summary-row">
+          <span>Fees</span>
+          <span>0.0350% / 0.0100%</span>
+        </div>
+      </div>
 
       {error && <div className="trade-error">{error}</div>}
 
@@ -305,19 +322,43 @@ export function TradePanel() {
       )}
 
       {/* Balance Summary */}
-      {isConnected && state && (
-        <div className="tp-bal-summary">
-          <div className="tp-bal-summary-title">Balance summary</div>
-          <div className="tp-bal-summary-row">
-            <span>USDC</span>
-            <span>{parseFloat(state.totalBalance).toFixed(2)}</span>
+      {/* Deposit / Withdraw — like Hyperliquid */}
+      {isConnected && (
+        <div className="tp-deposit-section">
+          <button className="tp-deposit-btn">Deposit</button>
+          <div className="tp-perps-spot-toggle">
+            <span className="tp-toggle-active">Perps</span>
+            <span className="tp-toggle-divider">|</span>
+            <span>Spot</span>
           </div>
-          {posSize !== 0 && (
-            <div className="tp-bal-summary-row">
-              <span>{coin}</span>
-              <span>{posSize.toFixed(4)}</span>
-            </div>
-          )}
+          <button className="tp-withdraw-btn">Withdraw</button>
+        </div>
+      )}
+
+      {/* Unified Account Summary — like Hyperliquid */}
+      {isConnected && state && (
+        <div className="tp-unified">
+          <div className="tp-unified-title">Unified Account Summary</div>
+          <div className="tp-unified-row">
+            <span>Portfolio Value</span>
+            <span>{formatUsd(state.totalBalance)}</span>
+          </div>
+          <div className="tp-unified-row">
+            <span>Unrealized PNL</span>
+            <span>{state.positions.length > 0
+              ? formatUsd(state.positions.reduce((s, p) => s + parseFloat(p.unrealizedPnl), 0).toString())
+              : '$0.00'}</span>
+          </div>
+          <div className="tp-unified-row">
+            <span>Margin Used</span>
+            <span>{formatUsd(state.totalMarginUsed)}</span>
+          </div>
+          <div className="tp-unified-row">
+            <span>Account Leverage</span>
+            <span>{parseFloat(state.totalNtlPos) > 0
+              ? `${(parseFloat(state.totalNtlPos) / parseFloat(state.accountValue)).toFixed(2)}x`
+              : '0.00x'}</span>
+          </div>
         </div>
       )}
     </div>

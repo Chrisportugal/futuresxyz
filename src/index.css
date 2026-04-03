@@ -990,6 +990,36 @@ body {
 }
 .tp-tif-select:focus { border-color: var(--blue); }
 
+/* Deposit/Withdraw section */
+.tp-deposit-section {
+  display: flex; gap: 8px; align-items: center; padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.tp-deposit-btn {
+  flex: 1; padding: 8px; background: var(--green); color: #fff;
+  border: none; border-radius: var(--radius-sm); font-size: 12px;
+  font-weight: 600; cursor: pointer; font-family: var(--font);
+}
+.tp-withdraw-btn {
+  flex: 1; padding: 8px; background: var(--bg-3); color: var(--text-1);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font);
+}
+.tp-perps-spot-toggle {
+  display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-3);
+}
+.tp-toggle-active { color: var(--text-0); font-weight: 600; }
+.tp-toggle-divider { color: var(--border); }
+
+/* Unified Account Summary */
+.tp-unified {
+  border-top: 1px solid var(--border); padding-top: 8px;
+}
+.tp-unified-title { font-size: 12px; font-weight: 600; color: var(--text-0); margin-bottom: 6px; }
+.tp-unified-row { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; }
+.tp-unified-row span:first-child { color: var(--text-3); }
+.tp-unified-row span:last-child { color: var(--text-1); font-weight: 500; font-family: 'Inter', monospace; }
+
 .trade-error {
   margin-top: 8px;
   padding: 8px 10px;

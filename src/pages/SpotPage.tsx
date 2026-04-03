@@ -100,8 +100,8 @@ function SpotSelector({ markets, selected, onSelect }: { markets: SpotMarket[]; 
 
 // ── Spot Trade Panel ──
 function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
-  const { isConnected } = useAccount()
-  const { exchange } = useHyperliquid()
+  const { isConnected, chainId } = useAccount()
+  const { exchange, switchToArbitrum } = useHyperliquid()
   const [side, setSide] = useState<'buy' | 'sell'>('buy')
   const [amount, setAmount] = useState('')
   const [placing, setPlacing] = useState(false)
@@ -214,7 +214,9 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
       {!isConnected ? (
         <div className="connect-prompt">Connect wallet to trade</div>
       ) : !exchange ? (
-        <div className="trade-error">Wallet connected but signer unavailable. Switch to Arbitrum chain in your wallet.</div>
+        <button className="trade-submit transfer" onClick={switchToArbitrum}>
+          Switch to Arbitrum to trade
+        </button>
       ) : (
         <button
           className={`trade-submit ${side}`}
@@ -228,7 +230,7 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
       {error && <div className="trade-error">{error}</div>}
       {success && <div className="dw-success">{success}</div>}
       <div style={{ fontSize: 10, color: 'var(--text-3)', marginTop: 4 }}>
-        {isConnected ? 'Wallet: connected' : 'Wallet: not connected'} | {exchange ? 'Signer: ready' : 'Signer: unavailable'} | Asset: {market ? 10000 + market.index : '?'}
+        Chain: {chainId ?? '?'} | {exchange ? 'Ready' : 'Switch to Arbitrum'}
       </div>
     </div>
   )

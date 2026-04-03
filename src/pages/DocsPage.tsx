@@ -113,7 +113,7 @@ export function DocsPage() {
             placed through the frontend automatically includes a small builder fee.
           </p>
           <ul>
-            <li><strong>Fee rate</strong> — 0.03% per trade (configurable up to 0.1%)</li>
+            <li><strong>Fee rate</strong> — 0.1% per trade (max allowed by Hyperliquid)</li>
             <li><strong>Revenue</strong> — Paid directly to the builder's Hyperliquid account</li>
             <li><strong>User approval</strong> — One-time gasless signature (EIP-712)</li>
             <li><strong>Requirement</strong> — Builder wallet needs 100+ USDC in perps account</li>
@@ -121,7 +121,7 @@ export function DocsPage() {
           <div className="docs-code">
             <pre>{`// src/config/hyperliquid.ts
 export const BUILDER_ADDRESS = '0x...'  // Your wallet
-export const BUILDER_FEE = 30           // 30 = 0.03%`}</pre>
+export const BUILDER_FEE = 100          // 100 = 0.1%`}</pre>
           </div>
         </section>
 

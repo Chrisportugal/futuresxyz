@@ -41,7 +41,7 @@ export function TradePanel() {
 
   const market = markets.find(m => m.name === selectedMarket)
   const midPrice = market ? parseFloat(market.midPrice) : 0
-  // const maxLev = market?.maxLeverage ?? 50
+  const maxLev = market?.maxLeverage ?? 50
   const coin = selectedMarket.replace('-PERP', '')
 
   // Unified balance (spot USDC + perps withdrawable)
@@ -91,25 +91,33 @@ export function TradePanel() {
         <button className="tp-mode-btn">Classic</button>
       </div>
       {showLevInput && (
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           <input
-            type="number"
-            className="trade-input"
-            style={{ flex: 1, padding: '6px 10px', fontSize: 13, background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-xs)', color: 'var(--text-0)' }}
-            value={levInput}
-            onChange={e => setLevInput(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                const n = parseInt(levInput)
-                if (n >= 1 && n <= 50) { setLeverage(n); setShowLevInput(false) }
-              }
-            }}
-            min={1} max={50} autoFocus placeholder="1-50"
+            type="range"
+            className="tp-slider"
+            min={1}
+            max={maxLev}
+            value={leverage}
+            onChange={e => { setLeverage(parseInt(e.target.value)); setLevInput(e.target.value) }}
           />
-          <button
-            style={{ padding: '6px 12px', background: 'var(--blue)', color: '#fff', border: 'none', borderRadius: 'var(--radius-xs)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font)' }}
-            onClick={() => { const n = parseInt(levInput); if (n >= 1 && n <= 50) { setLeverage(n); setShowLevInput(false) } }}
-          >Set</button>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <div className="trade-leverage-labels" style={{ flex: 1 }}>
+              <span>1x</span>
+              <span>{maxLev}x</span>
+            </div>
+            <div className="trade-input-wrapper" style={{ width: 70, padding: '4px 8px' }}>
+              <input
+                type="number"
+                className="trade-input"
+                style={{ fontSize: 13 }}
+                value={levInput}
+                onChange={e => { setLevInput(e.target.value); const n = parseInt(e.target.value); if (n >= 1 && n <= maxLev) setLeverage(n) }}
+                onKeyDown={e => { if (e.key === 'Enter') setShowLevInput(false) }}
+                min={1} max={maxLev} autoFocus
+              />
+              <span style={{ fontSize: 11, color: 'var(--text-3)' }}>x</span>
+            </div>
+          </div>
         </div>
       )}
 
@@ -229,8 +237,8 @@ export function TradePanel() {
       ) : !exchange ? (
         <div className="trade-error">Wallet signer unavailable. Switch to Arbitrum.</div>
       ) : available <= 0 ? (
-        <button className="trade-submit add-funds">
-          Not Enough Margin
+        <button className="trade-submit add-funds" onClick={() => window.open('https://app.hyperliquid.xyz', '_blank')}>
+          Not Enough Margin — Deposit
         </button>
       ) : (
         <button
@@ -261,11 +269,11 @@ export function TradePanel() {
         </div>
         <div className="tp-summary-row">
           <span>Slippage</span>
-          <span>Est: 0% / Max: 8.00%</span>
+          <span>{orderType === 'market' ? 'Est: 3.00% max' : 'N/A (limit)'}</span>
         </div>
         <div className="tp-summary-row">
           <span>Fees</span>
-          <span>0.0350% / 0.0100%</span>
+          <span>0.0350% + 0.1% builder</span>
         </div>
       </div>
 
@@ -278,7 +286,7 @@ export function TradePanel() {
         <OrderConfirmModal
           market={selectedMarket}
           side={side}
-          size={size}
+          size={tokenSize.toFixed(market?.szDecimals ?? 4)}
           price={priceNum}
           leverage={leverage}
           orderType={orderType}

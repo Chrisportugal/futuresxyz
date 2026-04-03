@@ -127,21 +127,23 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
       setSuccess(null)
 
       const isBuy = side === 'buy'
-      // Spot asset index = 10000 + pair index
       const assetIndex = 10000 + market.index
+      const isMarketOrder = orderType === 'market'
 
-      // For market orders: use 5% slippage (spot can be less liquid)
-      const slippedPx = isBuy ? price * 1.05 : price * 0.95
-      // Round price based on magnitude
       let limitPx: string
-      if (slippedPx >= 10000) limitPx = slippedPx.toFixed(0)
-      else if (slippedPx >= 100) limitPx = slippedPx.toFixed(1)
-      else if (slippedPx >= 1) limitPx = slippedPx.toFixed(2)
-      else if (slippedPx >= 0.001) limitPx = slippedPx.toFixed(5)
-      else limitPx = slippedPx.toFixed(8)
+      if (isMarketOrder) {
+        const slippedPx = isBuy ? price * 1.05 : price * 0.95
+        if (slippedPx >= 10000) limitPx = slippedPx.toFixed(0)
+        else if (slippedPx >= 100) limitPx = slippedPx.toFixed(1)
+        else if (slippedPx >= 1) limitPx = slippedPx.toFixed(2)
+        else if (slippedPx >= 0.001) limitPx = slippedPx.toFixed(5)
+        else limitPx = slippedPx.toFixed(8)
+      } else {
+        if (!limitPrice || parseFloat(limitPrice) <= 0) { setError('Enter a limit price'); setPlacing(false); return }
+        limitPx = limitPrice
+      }
 
-      // Convert USDC to token amount and round
-      const roundedSize = Math.floor(tokenAmount).toString()
+      const roundedSize = tokenAmount.toFixed(4)
 
       await exchange.order({
         orders: [{
@@ -150,7 +152,7 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
           p: limitPx,
           s: roundedSize,
           r: false,
-          t: { limit: { tif: 'FrontendMarket' } },
+          t: { limit: { tif: isMarketOrder ? 'FrontendMarket' : 'Gtc' } },
         }],
         grouping: 'na',
       })

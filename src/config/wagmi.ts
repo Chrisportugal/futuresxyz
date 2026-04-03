@@ -1,6 +1,6 @@
 import { http, createConfig } from 'wagmi'
 import { defineChain } from 'viem'
-import { injected, walletConnect } from 'wagmi/connectors'
+import { injected } from 'wagmi/connectors'
 
 export const hyperEVM = defineChain({
   id: 999,
@@ -14,25 +14,10 @@ export const hyperEVM = defineChain({
   },
 })
 
-const projectId = 'b3c30124964e3738c82e7bfad2e1eec7'
-
 export const config = createConfig({
   chains: [hyperEVM],
   connectors: [
     injected(),
-    walletConnect({
-      projectId,
-      metadata: {
-        name: 'Futuresxyz',
-        description: 'Hyperliquid Perps & Prediction Markets',
-        url: 'https://futures.xyz',
-        icons: [],
-      },
-      showQrModal: true,
-      qrModalOptions: {
-        themeMode: 'dark' as const,
-      },
-    }),
   ],
   transports: {
     [hyperEVM.id]: http(),

@@ -178,7 +178,6 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
     <div className="trade-panel">
       <div className="tp-balance-header">
         <span className="tp-balance-label">Spot Trading</span>
-        <span className="tp-balance-value" style={{ fontSize: 12, color: 'var(--text-3)' }}>No leverage</span>
       </div>
 
       <div className="trade-side-toggle">

@@ -4,7 +4,8 @@ import { BUILDER_ADDRESS, BUILDER_FEE } from '../config/hyperliquid'
 
 export function useBuilderApproval() {
   const { info, exchange, address, isConnected } = useHyperliquid()
-  const [isApproved, setIsApproved] = useState(false)
+  // Skip approval until builder wallet has 100+ USDC in perps
+  const [isApproved, setIsApproved] = useState(true)
   const [checking, setChecking] = useState(true)
   const [approving, setApproving] = useState(false)
   const [error, setError] = useState<string | null>(null)

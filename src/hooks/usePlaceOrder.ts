@@ -123,7 +123,7 @@ export function usePlaceOrder() {
         const result = await exchange.order({
           orders: orders as Parameters<typeof exchange.order>[0]['orders'],
           grouping: 'normalTpsl',
-          builder: { b: BUILDER_ADDRESS, f: BUILDER_FEE },
+          // builder: { b: BUILDER_ADDRESS, f: BUILDER_FEE }, // Disabled until builder has 100+ USDC in perps
         })
         setLastResult(result)
         return result
@@ -139,7 +139,7 @@ export function usePlaceOrder() {
             t: { limit: { tif: isMarket ? 'FrontendMarket' : (params.tif || 'Gtc') } },
           }],
           grouping: 'na',
-          builder: { b: BUILDER_ADDRESS, f: BUILDER_FEE },
+          // builder: { b: BUILDER_ADDRESS, f: BUILDER_FEE }, // Disabled until builder has 100+ USDC in perps
         })
         setLastResult(result)
         return result

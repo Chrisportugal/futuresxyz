@@ -15,7 +15,7 @@ export function TradePanel() {
   const { markets } = useMarketMeta()
   const { state } = useUserState()
   const { placeOrder, placing, error, clearError } = usePlaceOrder()
-  const { isConnected, agentApproved, approving, approvalError, approveAgent, switchToArbitrum } = useHyperliquid()
+  const { isConnected, approvalError } = useHyperliquid()
 
   const [side, setSide] = useState<OrderSide>('buy')
   const [orderType, setOrderType] = useState<OrderType>('market')

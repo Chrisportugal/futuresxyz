@@ -8,7 +8,7 @@ import { useToast } from '../../contexts/ToastContext'
 import { formatPrice, formatUsd, formatPct } from '../../lib/format'
 import { useAccount } from 'wagmi'
 
-type Tab = 'orders' | 'history' | 'positions' | 'assets' | 'trades'
+type Tab = 'orders' | 'history' | 'positions' | 'assets' | 'trades' | 'twap' | 'funding'
 
 export function Positions() {
   const { isConnected } = useAccount()
@@ -52,8 +52,10 @@ export function Positions() {
     { id: 'assets', label: 'Balances', count: spotBalances.length },
     { id: 'positions', label: 'Positions', count: state?.positions.length },
     { id: 'orders', label: 'Open Orders', count: openOrders.length },
+    { id: 'twap', label: 'TWAP' },
     { id: 'trades', label: 'Trade History' },
-    { id: 'history', label: 'Funding' },
+    { id: 'funding', label: 'Funding History' },
+    { id: 'history', label: 'Order History' },
   ]
 
   return (
@@ -235,25 +237,35 @@ export function Positions() {
           {tab === 'assets' && (
             spotBalances.length === 0 ? (
               <div className="pos-empty-state">
-                <div className="pos-empty-icon">—</div>
-                <div className="pos-empty-text">No assets</div>
+                <div className="pos-empty-icon">--</div>
+                <div className="pos-empty-text">No balances</div>
               </div>
             ) : (
               <div className="positions-table">
-                <div className="pos-row-full pos-row-header">
+                <div className="pos-row-full pos-row-header" style={{ gridTemplateColumns: '0.8fr 1.5fr 1.5fr 1fr 1fr' }}>
                   <span>Coin</span>
                   <span>Total Balance</span>
-                  <span>Available</span>
-                  <span>USD Value</span>
+                  <span>Available Balance</span>
+                  <span>USDC Value</span>
+                  <span>PNL (ROE %)</span>
                 </div>
-                {spotBalances.map(b => (
-                  <div key={b.coin} className="pos-row-full" style={{ gridTemplateColumns: '1fr 2fr 2fr 1fr' }}>
-                    <span className="pos-name">{b.coin}</span>
-                    <span>{parseFloat(b.total).toLocaleString('en-US', { maximumFractionDigits: 8 })}</span>
-                    <span>{parseFloat(b.available).toLocaleString('en-US', { maximumFractionDigits: 8 })}</span>
-                    <span>${parseFloat(b.usdValue).toFixed(2)}</span>
-                  </div>
-                ))}
+                {[...spotBalances]
+                  .sort((a, b) => parseFloat(b.usdValue) - parseFloat(a.usdValue))
+                  .map(b => {
+                    const pnl = parseFloat(b.pnl)
+                    const pnlPct = parseFloat(b.pnlPct)
+                    return (
+                      <div key={b.coin} className="pos-row-full" style={{ gridTemplateColumns: '0.8fr 1.5fr 1.5fr 1fr 1fr' }}>
+                        <span className="pos-name">{b.coin}</span>
+                        <span>{parseFloat(b.total).toLocaleString('en-US', { maximumFractionDigits: 8 })} {b.coin}</span>
+                        <span>{parseFloat(b.available).toLocaleString('en-US', { maximumFractionDigits: 8 })} {b.coin}</span>
+                        <span>${parseFloat(b.usdValue).toFixed(2)}</span>
+                        <span className={pnl >= 0 ? 'green' : 'red'}>
+                          {pnl !== 0 ? `$${pnl.toFixed(2)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%)` : '--'}
+                        </span>
+                      </div>
+                    )
+                  })}
               </div>
             )
           )}
@@ -295,6 +307,21 @@ export function Positions() {
                 })}
               </div>
             )
+          )}
+          {/* TWAP */}
+          {tab === 'twap' && (
+            <div className="pos-empty-state">
+              <div className="pos-empty-icon">--</div>
+              <div className="pos-empty-text">No TWAP orders</div>
+            </div>
+          )}
+
+          {/* Funding History */}
+          {tab === 'funding' && (
+            <div className="pos-empty-state">
+              <div className="pos-empty-icon">--</div>
+              <div className="pos-empty-text">No funding history</div>
+            </div>
           )}
         </>
       )}

@@ -5,6 +5,7 @@ import { formatPrice } from '../lib/format'
 import { createChart, CandlestickSeries, HistogramSeries, type IChartApi, type ISeriesApi, type CandlestickData, type HistogramData, type Time } from 'lightweight-charts'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAccount } from 'wagmi'
+import { Positions } from '../components/perps/Positions'
 
 // ── Spot Chart ──
 function SpotChart({ coin, theme }: { coin: string; theme: 'dark' | 'light' }) {
@@ -208,6 +209,10 @@ export function SpotPage() {
         <div className="perps-trade-area">
           <SpotTradePanel market={selected} />
         </div>
+      </div>
+
+      <div className="perps-bottom">
+        <Positions />
       </div>
     </div>
   )

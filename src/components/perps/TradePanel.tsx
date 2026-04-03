@@ -82,26 +82,10 @@ export function TradePanel() {
 
   return (
     <div className="trade-panel">
-      {/* Balance Header — unified */}
-      <div className="tp-balance-header">
-        <span className="tp-balance-label">Balance</span>
-        <span className="tp-balance-value">{formatUsd(available)}</span>
-      </div>
-
-      {/* Cross / Leverage */}
+      {/* Cross / Leverage — top of sidebar like Hyperliquid */}
       <div className="tp-mode-row">
         <button className="tp-mode-btn">Cross</button>
         <button className="tp-mode-btn tp-lev-btn">{leverage}x</button>
-      </div>
-
-      {/* Side Toggle */}
-      <div className="trade-side-toggle">
-        <button className={`trade-side-btn ${side === 'buy' ? 'active buy' : ''}`} onClick={() => setSide('buy')}>
-          Long
-        </button>
-        <button className={`trade-side-btn ${side === 'sell' ? 'active sell' : ''}`} onClick={() => setSide('sell')}>
-          Short
-        </button>
       </div>
 
       {/* Order Type */}
@@ -111,6 +95,16 @@ export function TradePanel() {
         </button>
         <button className={`trade-type-btn ${orderType === 'limit' ? 'active' : ''}`} onClick={() => setOrderType('limit')}>
           Limit
+        </button>
+      </div>
+
+      {/* Side Toggle */}
+      <div className="trade-side-toggle">
+        <button className={`trade-side-btn ${side === 'buy' ? 'active buy' : ''}`} onClick={() => setSide('buy')}>
+          Long
+        </button>
+        <button className={`trade-side-btn ${side === 'sell' ? 'active sell' : ''}`} onClick={() => setSide('sell')}>
+          Short
         </button>
       </div>
 

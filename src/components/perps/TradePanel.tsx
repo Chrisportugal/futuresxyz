@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useAccount } from 'wagmi'
 import { useMarket } from '../../contexts/MarketContext'
+import { useHyperliquid } from '../../contexts/HyperliquidContext'
 import { useMarketMeta } from '../../hooks/useMarketMeta'
 import { useUserState } from '../../hooks/useUserState'
 import { usePlaceOrder, type OrderSide, type OrderType, type Tif } from '../../hooks/usePlaceOrder'
@@ -18,6 +19,7 @@ export function TradePanel() {
   const { state } = useUserState()
   const { placeOrder, placing, error, clearError } = usePlaceOrder()
   const { isApproved, approving, approve, error: approvalError } = useBuilderApproval()
+  const { switchToArbitrum } = useHyperliquid()
 
   const [side, setSide] = useState<OrderSide>('buy')
   const [orderType, setOrderType] = useState<OrderType>('market')
@@ -256,7 +258,7 @@ export function TradePanel() {
       ) : !isApproved ? (
         <button
           className="trade-submit transfer"
-          onClick={approve}
+          onClick={() => { switchToArbitrum(); approve() }}
           disabled={approving}
         >
           {approving ? 'Approving...' : 'Enable Trading (one-time signature)'}

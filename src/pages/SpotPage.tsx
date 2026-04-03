@@ -211,14 +211,6 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
 
       {!isConnected ? (
         <div className="connect-prompt">Connect wallet to trade</div>
-      ) : !agentApproved ? (
-        <button
-          className="trade-submit transfer"
-          onClick={async () => { switchToArbitrum(); setTimeout(approveAgent, 1500) }}
-          disabled={approving}
-        >
-          {approving ? 'Approving...' : 'Enable Trading (one-time)'}
-        </button>
       ) : (
         <button
           className={`trade-submit ${side}`}
@@ -232,6 +224,16 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
       {error && <div className="trade-error">{error}</div>}
       {approvalError && <div className="trade-error">{approvalError}</div>}
       {success && <div className="dw-success">{success}</div>}
+
+      {isConnected && !agentApproved && (
+        <button
+          onClick={async () => { switchToArbitrum(); setTimeout(approveAgent, 1500) }}
+          disabled={approving}
+          style={{ marginTop: 6, width: '100%', padding: 8, background: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text-3)', fontSize: 11, cursor: 'pointer', fontFamily: 'var(--font)' }}
+        >
+          {approving ? 'Setting up...' : 'Enable instant trading (optional)'}
+        </button>
+      )}
     </div>
   )
 }

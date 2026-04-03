@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react'
-import { useAccount, useSwitchChain } from 'wagmi'
+import { useAccount, useWalletClient, useSwitchChain } from 'wagmi'
 import { HttpTransport, InfoClient, ExchangeClient } from '@nktkas/hyperliquid'
 import { USE_TESTNET } from '../config/hyperliquid'
 import { useAgentWallet } from '../hooks/useAgentWallet'
@@ -7,8 +7,7 @@ import { arbitrum } from 'wagmi/chains'
 
 interface HyperliquidContextValue {
   info: InfoClient
-  exchange: ExchangeClient | null       // Agent exchange for trading
-  browserExchange: ExchangeClient | null // Browser wallet for approvals
+  exchange: ExchangeClient | null
   isConnected: boolean
   address: string | undefined
   agentApproved: boolean
@@ -24,10 +23,24 @@ const transport = new HttpTransport({ isTestnet: USE_TESTNET })
 
 export function HyperliquidProvider({ children }: { children: ReactNode }) {
   const { chainId } = useAccount()
+  const { data: walletClient } = useWalletClient()
   const { switchChain } = useSwitchChain()
   const agent = useAgentWallet()
 
   const info = useMemo(() => new InfoClient({ transport }), [])
+
+  // Direct browser wallet exchange (fallback)
+  const directExchange = useMemo(() => {
+    if (!walletClient) return null
+    try {
+      return new ExchangeClient({ wallet: walletClient, transport })
+    } catch { return null }
+  }, [walletClient])
+
+  // Use agent exchange if approved, otherwise try direct
+  const exchange = agent.agentApproved && agent.exchange
+    ? agent.exchange
+    : directExchange
 
   const switchToArbitrum = () => {
     if (chainId !== arbitrum.id) {
@@ -38,8 +51,7 @@ export function HyperliquidProvider({ children }: { children: ReactNode }) {
   return (
     <HyperliquidContext.Provider value={{
       info,
-      exchange: agent.exchange,
-      browserExchange: agent.browserExchange,
+      exchange,
       isConnected: agent.isConnected,
       address: agent.address,
       agentApproved: agent.agentApproved,

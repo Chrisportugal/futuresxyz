@@ -15,8 +15,18 @@ export const hyperEVM = defineChain({
   },
 })
 
+// Hyperliquid L1 signing chain — required for order signing
+export const hyperliquidL1 = defineChain({
+  id: 1337,
+  name: 'Hyperliquid L1',
+  nativeCurrency: { name: 'HYPE', symbol: 'HYPE', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://api.hyperliquid.xyz/evm'] },
+  },
+})
+
 export const config = createConfig({
-  chains: [arbitrum, mainnet, hyperEVM],
+  chains: [arbitrum, mainnet, hyperEVM, hyperliquidL1],
   connectors: [
     injected(),
   ],
@@ -24,5 +34,6 @@ export const config = createConfig({
     [arbitrum.id]: http(),
     [mainnet.id]: http(),
     [hyperEVM.id]: http(),
+    [hyperliquidL1.id]: http('https://api.hyperliquid.xyz/evm'),
   },
 })

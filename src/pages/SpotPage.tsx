@@ -99,7 +99,7 @@ function SpotSelector({ markets, selected, onSelect }: { markets: SpotMarket[]; 
 
 // ── Spot Trade Panel ──
 function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
-  const { isConnected, exchange, agentApproved, approving, approveAgent, switchToArbitrum, approvalError } = useHyperliquid()
+  const { isConnected, exchange } = useHyperliquid()
   const [side, setSide] = useState<'buy' | 'sell'>('buy')
   const [amount, setAmount] = useState('')
   const [placing, setPlacing] = useState(false)
@@ -222,7 +222,6 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
       )}
 
       {error && <div className="trade-error">{error}</div>}
-      {approvalError && <div className="trade-error">{approvalError}</div>}
       {success && <div className="dw-success">{success}</div>}
 
     </div>

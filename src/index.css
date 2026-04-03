@@ -1740,6 +1740,53 @@ body {
 .ocm-btn-confirm.sell { background: var(--red); color: #fff; }
 .ocm-btn-confirm:hover { opacity: 0.9; }
 
+/* ─── Spot Page ─── */
+.spot-page { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.spot-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px 0; }
+.spot-title { font-size: 18px; font-weight: 700; color: var(--text-0); }
+.spot-count { font-size: 13px; color: var(--text-3); }
+
+.spot-search-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin: 12px 20px; padding: 10px 14px;
+  background: var(--bg-1); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.spot-search {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text-0); font-size: 14px; font-family: var(--font);
+}
+.spot-search::placeholder { color: var(--text-3); }
+
+.spot-table { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.spot-row {
+  display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr;
+  padding: 8px 20px; align-items: center; font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+.spot-row-header {
+  font-size: 11px; color: var(--text-3); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.3px;
+  background: var(--bg-1); position: sticky; top: 0; z-index: 1;
+  flex-shrink: 0;
+}
+.spot-col {
+  background: none; border: none; color: var(--text-3); font-size: 11px;
+  font-weight: 600; cursor: pointer; font-family: var(--font); padding: 0;
+  text-transform: uppercase; letter-spacing: 0.3px; text-align: left;
+}
+.spot-col:hover { color: var(--text-1); }
+.spot-col-right { text-align: right; }
+.spot-body { flex: 1; overflow-y: auto; }
+
+.spot-token { display: flex; align-items: center; gap: 2px; }
+.spot-token-name { font-weight: 600; color: var(--text-0); }
+.spot-token-pair { color: var(--text-3); font-size: 12px; }
+.spot-price { color: var(--text-1); font-family: 'Inter', monospace; font-weight: 500; }
+.spot-volume { color: var(--text-2); font-family: 'Inter', monospace; }
+.spot-empty { padding: 40px; text-align: center; color: var(--text-3); }
+.spot-loading { padding: 40px; text-align: center; color: var(--text-3); }
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }

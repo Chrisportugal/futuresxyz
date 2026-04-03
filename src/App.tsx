@@ -11,6 +11,7 @@ import { PerpsPage } from './pages/PerpsPage'
 import { PredictionsPage } from './pages/PredictionsPage'
 import { ProtocolsPage } from './pages/ProtocolsPage'
 import { PortfolioPage } from './pages/PortfolioPage'
+import { SpotPage } from './pages/SpotPage'
 import { DocsPage } from './pages/DocsPage'
 import { ComingSoonPage } from './pages/ComingSoonPage'
 import { useSoundNotifications } from './hooks/useSoundNotifications'
@@ -88,7 +89,7 @@ function AppContent() {
 
         <Routes>
           <Route path="/perps" element={<PerpsPage />} />
-          <Route path="/spot" element={<ComingSoonPage title="Spot Trading" description="Trade spot markets on Hyperliquid." />} />
+          <Route path="/spot" element={<SpotPage />} />
           <Route path="/predictions" element={<PredictionsPage />} />
           <Route path="/lending" element={<ComingSoonPage title="Lending" description="Lend and borrow on HyperEVM protocols." />} />
           <Route path="/cdp" element={<ComingSoonPage title="CDP" description="Collateralized debt positions on HyperEVM." />} />

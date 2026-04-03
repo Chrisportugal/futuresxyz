@@ -63,14 +63,37 @@ export function useAgentWallet() {
     }
   }, [walletClient])
 
-  // Check if agent is already approved
+  // Check if agent is already approved — check on-chain, not just localStorage
   useEffect(() => {
     if (!address || !agentAccount) {
       setAgentApproved(false)
       return
     }
+
+    // First check localStorage (fast)
     const key = `${AGENT_APPROVED_STORAGE}-${address.toLowerCase()}-${agentAccount.address.toLowerCase()}`
-    setAgentApproved(localStorage.getItem(key) === 'true')
+    if (localStorage.getItem(key) === 'true') {
+      setAgentApproved(true)
+      return
+    }
+
+    // Then check on-chain
+    const checkOnChain = async () => {
+      try {
+        const info = new (await import('@nktkas/hyperliquid')).InfoClient({
+          transport: new (await import('@nktkas/hyperliquid')).HttpTransport({ isTestnet: USE_TESTNET })
+        })
+        const agents = await info.extraAgents({ user: address as `0x${string}` }) as Array<{ address: string; name: string }>
+        const found = agents.some(a => a.address.toLowerCase() === agentAccount.address.toLowerCase())
+        if (found) {
+          localStorage.setItem(key, 'true')
+          setAgentApproved(true)
+        }
+      } catch {
+        // Ignore — will show Enable Trading button
+      }
+    }
+    checkOnChain()
   }, [address, agentAccount])
 
   // Approve agent — user signs once with browser wallet
@@ -84,10 +107,30 @@ export function useAgentWallet() {
       setApproving(true)
       setError(null)
 
-      await browserExchange.approveAgent({
-        agentAddress: agentAccount.address,
-        agentName: 'futuresxyz',
-      })
+      // Check if agent already approved on-chain
+      const hl = await import('@nktkas/hyperliquid')
+      const infoClient = new hl.InfoClient({ transport })
+      const agents = await infoClient.extraAgents({ user: address as `0x${string}` }) as Array<{ address: string }>
+      const alreadyApproved = agents.some(a => a.address.toLowerCase() === agentAccount.address.toLowerCase())
+
+      if (!alreadyApproved) {
+        await browserExchange.approveAgent({
+          agentAddress: agentAccount.address,
+          agentName: 'futuresxyz',
+        })
+      }
+
+      // Also approve builder fee if not yet approved
+      try {
+        const { BUILDER_ADDRESS, BUILDER_FEE } = await import('../config/hyperliquid')
+        const maxFee = await infoClient.maxBuilderFee({ user: address as `0x${string}`, builder: BUILDER_ADDRESS })
+        if (Number(maxFee) === 0) {
+          const feePercent = `${(BUILDER_FEE / 1000).toFixed(2)}%` as `${string}%`
+          await browserExchange.approveBuilderFee({ maxFeeRate: feePercent, builder: BUILDER_ADDRESS })
+        }
+      } catch (e) {
+        console.warn('Builder fee approval skipped:', e)
+      }
 
       // Mark as approved
       const key = `${AGENT_APPROVED_STORAGE}-${address.toLowerCase()}-${agentAccount.address.toLowerCase()}`

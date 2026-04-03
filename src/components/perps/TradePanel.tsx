@@ -46,18 +46,19 @@ export function TradePanel() {
   const available = state ? parseFloat(state.totalBalance) : 0
   const buyingPower = available * leverage
 
-  const sizeNum = parseFloat(size) || 0
+  // Size is in USDC — convert to token amount
+  const usdcSize = parseFloat(size) || 0
   const priceNum = orderType === 'limit' && price ? parseFloat(price) : midPrice
-  const orderValue = sizeNum * priceNum
-  // Fee is shown as percentage in the summary, not calculated here
+  const tokenSize = priceNum > 0 ? usdcSize / priceNum : 0
+  const orderValue = usdcSize
 
   const handleSubmit = async () => {
-    if (!size || sizeNum <= 0) return
+    if (!size || tokenSize <= 0) return
     clearError()
     await placeOrder({
       coin: selectedMarket,
       side,
-      size,
+      size: tokenSize.toFixed(market?.szDecimals ?? 4),
       orderType,
       price: orderType === 'market' ? midPrice.toFixed(6) : price,
       tif: orderType === 'limit' ? tif : undefined,
@@ -70,10 +71,9 @@ export function TradePanel() {
 
   const handleSizePct = (pct: number) => {
     setSizePct(pct)
-    if (!midPrice || !buyingPower) return
-    const notional = (buyingPower * pct) / 100
-    const sz = notional / midPrice
-    setSize(sz > 0 ? sz.toFixed(market?.szDecimals ?? 4) : '')
+    if (!buyingPower) return
+    const usdcVal = (buyingPower * pct) / 100
+    setSize(usdcVal > 0 ? usdcVal.toFixed(2) : '')
   }
 
   // Current position
@@ -139,12 +139,17 @@ export function TradePanel() {
             onChange={e => {
               setSize(e.target.value)
               const val = parseFloat(e.target.value) || 0
-              if (buyingPower > 0) setSizePct(Math.min(100, Math.round((val * midPrice / buyingPower) * 100)))
+              if (buyingPower > 0) setSizePct(Math.min(100, Math.round((val / buyingPower) * 100)))
             }}
             step="any"
           />
           <span className="trade-input-unit">USDC ▾</span>
         </div>
+        {tokenSize > 0 && (
+          <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 4 }}>
+            = {tokenSize.toFixed(market?.szDecimals ?? 4)} {coin}
+          </div>
+        )}
       </div>
 
       {/* Slider with % input */}

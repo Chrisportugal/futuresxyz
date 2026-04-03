@@ -1,13 +1,12 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react'
-import { useAccount, useSwitchChain } from 'wagmi'
-import { HttpTransport, InfoClient } from '@nktkas/hyperliquid'
+import { useAccount, useWalletClient, useSwitchChain } from 'wagmi'
+import { HttpTransport, InfoClient, ExchangeClient } from '@nktkas/hyperliquid'
 import { USE_TESTNET } from '../config/hyperliquid'
-import { useAgentWallet } from '../hooks/useAgentWallet'
 import { arbitrum } from 'wagmi/chains'
 
 interface HyperliquidContextValue {
   info: InfoClient
-  exchange: ReturnType<typeof useAgentWallet>['exchange']
+  exchange: ExchangeClient | null
   isConnected: boolean
   address: string | undefined
   agentApproved: boolean
@@ -18,32 +17,36 @@ interface HyperliquidContextValue {
 }
 
 const HyperliquidContext = createContext<HyperliquidContextValue | null>(null)
-
 const transport = new HttpTransport({ isTestnet: USE_TESTNET })
 
 export function HyperliquidProvider({ children }: { children: ReactNode }) {
-  const { chainId } = useAccount()
+  const { address, isConnected, chainId } = useAccount()
+  const { data: walletClient } = useWalletClient()
   const { switchChain } = useSwitchChain()
-  const agent = useAgentWallet()
 
   const info = useMemo(() => new InfoClient({ transport }), [])
 
-  const switchToArbitrum = () => {
-    if (chainId !== arbitrum.id) {
-      switchChain({ chainId: arbitrum.id })
+  const exchange = useMemo(() => {
+    if (!walletClient) return null
+    try {
+      return new ExchangeClient({ wallet: walletClient, transport })
+    } catch (e) {
+      console.error('Failed to create ExchangeClient:', e)
+      return null
     }
+  }, [walletClient])
+
+  const switchToArbitrum = () => {
+    if (chainId !== arbitrum.id) switchChain({ chainId: arbitrum.id })
   }
 
   return (
     <HyperliquidContext.Provider value={{
-      info,
-      exchange: agent.agentApproved ? agent.exchange : null,
-      isConnected: agent.isConnected,
-      address: agent.address,
-      agentApproved: agent.agentApproved,
-      approving: agent.approving,
-      approvalError: agent.error,
-      approveAgent: agent.approveAgent,
+      info, exchange, isConnected, address,
+      agentApproved: true,
+      approving: false,
+      approvalError: null,
+      approveAgent: async () => {},
       switchToArbitrum,
     }}>
       {children}

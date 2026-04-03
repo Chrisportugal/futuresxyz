@@ -1882,11 +1882,10 @@ body {
 /* Spot selector dropdown */
 .spot-selector { position: relative; }
 .spot-dropdown {
-  position: absolute; top: 100%; left: 0; z-index: 50;
-  background: var(--bg-1); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); width: 300px; max-height: 400px;
-  display: flex; flex-direction: column; box-shadow: var(--shadow);
-  margin-top: 4px;
+  position: fixed; top: 80px; left: 20px; z-index: 1000;
+  background: var(--bg-0); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); width: 350px; max-height: 500px;
+  display: flex; flex-direction: column; box-shadow: 0 16px 64px rgba(0,0,0,0.5);
 }
 .spot-dd-search {
   padding: 10px 12px; border: none; border-bottom: 1px solid var(--border);

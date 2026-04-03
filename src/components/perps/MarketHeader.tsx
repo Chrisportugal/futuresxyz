@@ -2,7 +2,7 @@ import { useMarket } from '../../contexts/MarketContext'
 import { useMarketStats } from '../../hooks/useMarketStats'
 import { useFundingCountdown } from '../../hooks/useFundingCountdown'
 import { MarketSelector } from './MarketSelector'
-import { formatPrice, formatUsd } from '../../lib/format'
+import { formatPrice } from '../../lib/format'
 
 export function MarketHeader() {
   const { selectedMarket } = useMarket()

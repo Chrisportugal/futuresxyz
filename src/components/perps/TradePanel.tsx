@@ -51,7 +51,7 @@ export function TradePanel() {
   const sizeNum = parseFloat(size) || 0
   const priceNum = orderType === 'limit' && price ? parseFloat(price) : midPrice
   const orderValue = sizeNum * priceNum
-  const estFee = orderValue * 0.00035
+  // Fee is shown as percentage in the summary, not calculated here
 
   const handleSubmit = async () => {
     if (!size || sizeNum <= 0) return

@@ -213,10 +213,10 @@ export function TradePanel() {
         <button
           className={`trade-submit ${side}`}
           onClick={() => {
-            if (!size || sizeNum <= 0) return
+            if (!size || tokenSize <= 0) return
             setShowConfirm(true)
           }}
-          disabled={placing || !size || sizeNum <= 0}
+          disabled={placing || !size || tokenSize <= 0}
         >
           {placing ? 'Placing...' : side === 'buy' ? 'Buy / Long' : 'Sell / Short'}
         </button>

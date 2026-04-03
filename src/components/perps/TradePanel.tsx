@@ -86,9 +86,8 @@ export function TradePanel() {
       <div className="tp-mode-row" style={{ gap: 4 }}>
         <button className="tp-mode-btn">Cross</button>
         <button className="tp-mode-btn tp-lev-btn" onClick={() => {
-          const presets = [1, 2, 3, 5, 10, 20, 50]
-          const next = presets.find(l => l > leverage) ?? presets[0]
-          setLeverage(next)
+          const val = prompt('Set leverage (1-50):', String(leverage))
+          if (val) { const n = parseInt(val); if (n >= 1 && n <= 50) setLeverage(n) }
         }}>{leverage}x</button>
         <button className="tp-mode-btn">Classic</button>
       </div>

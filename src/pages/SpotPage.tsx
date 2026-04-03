@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useHyperliquid } from '../contexts/HyperliquidContext'
 import { useSpotMarkets, type SpotMarket } from '../hooks/useSpotMarkets'
 import { formatPrice } from '../lib/format'

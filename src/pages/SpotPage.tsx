@@ -113,7 +113,12 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
   const total = amountNum * price
 
   const handleSpotOrder = async () => {
-    if (!exchange || !market || amountNum <= 0 || price <= 0) return
+    if (!market || amountNum <= 0 || price <= 0) return
+
+    if (!exchange) {
+      setError('Wallet not connected. Switch to Arbitrum chain and reconnect.')
+      return
+    }
 
     try {
       setPlacing(true)
@@ -124,37 +129,44 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
       // Spot asset index = 10000 + pair index
       const assetIndex = 10000 + market.index
 
-      // For market orders: use 3% slippage
-      const slippedPx = isBuy ? price * 1.03 : price * 0.97
+      // For market orders: use 5% slippage (spot can be less liquid)
+      const slippedPx = isBuy ? price * 1.05 : price * 0.95
       // Round price based on magnitude
       let limitPx: string
       if (slippedPx >= 10000) limitPx = slippedPx.toFixed(0)
       else if (slippedPx >= 100) limitPx = slippedPx.toFixed(1)
       else if (slippedPx >= 1) limitPx = slippedPx.toFixed(2)
-      else if (slippedPx >= 0.01) limitPx = slippedPx.toFixed(4)
-      else limitPx = slippedPx.toFixed(6)
+      else if (slippedPx >= 0.001) limitPx = slippedPx.toFixed(5)
+      else limitPx = slippedPx.toFixed(8)
+
+      // Round size — spot tokens have varying decimals
+      const roundedSize = parseFloat(amount).toFixed(0) // Spot sizes are usually whole numbers
 
       await exchange.order({
         orders: [{
           a: assetIndex,
           b: isBuy,
           p: limitPx,
-          s: amount,
+          s: roundedSize,
           r: false,
           t: { limit: { tif: 'FrontendMarket' } },
         }],
         grouping: 'na',
       })
 
-      setSuccess(`${isBuy ? 'Bought' : 'Sold'} ${amount} ${market.baseToken}`)
+      setSuccess(`${isBuy ? 'Bought' : 'Sold'} ${roundedSize} ${market.baseToken}`)
       setAmount('')
     } catch (e) {
       console.error('Spot order failed:', e)
       const msg = e instanceof Error ? e.message : String(e)
-      if (msg.includes('Not enough')) {
-        setError('Not enough balance. You need USDC to buy or tokens to sell.')
+      if (msg.includes('viem wallet') || msg.includes('signTypedData')) {
+        setError('Signing failed. Switch your wallet to Arbitrum chain.')
+      } else if (msg.includes('Not enough') || msg.includes('insufficient')) {
+        setError('Not enough balance. Need USDC to buy or tokens to sell.')
+      } else if (msg.includes('rejected') || msg.includes('denied')) {
+        setError('Transaction rejected by wallet.')
       } else {
-        setError(msg.slice(0, 120))
+        setError(msg.slice(0, 150))
       }
     } finally {
       setPlacing(false)

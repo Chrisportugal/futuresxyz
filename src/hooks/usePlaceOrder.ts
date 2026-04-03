@@ -17,6 +17,7 @@ interface PlaceOrderParams {
   reduceOnly?: boolean
   tpPrice?: string
   slPrice?: string
+  leverage?: number
 }
 
 function roundPrice(price: number): string {
@@ -36,7 +37,7 @@ export function usePlaceOrder() {
 
   const placeOrder = useCallback(async (params: PlaceOrderParams) => {
     if (!exchange) {
-      setError('Wallet not connected')
+      setError('Wallet not connected. Switch to Arbitrum and reconnect.')
       return null
     }
 
@@ -44,15 +45,33 @@ export function usePlaceOrder() {
       setPlacing(true)
       setError(null)
 
-      const assetIndex = markets.findIndex(m => m.name === params.coin)
+      // Strip -PERP suffix if present
+      const coin = params.coin.replace('-PERP', '')
+
+      const assetIndex = markets.findIndex(m => m.name === coin)
       if (assetIndex === -1) {
-        setError(`Market ${params.coin} not found`)
+        setError(`Market ${coin} not found`)
         setPlacing(false)
         return null
       }
 
+      const market = markets[assetIndex]
       const isBuy = params.side === 'buy'
       const isMarket = params.orderType === 'market'
+
+      // Update leverage if provided
+      if (params.leverage && params.leverage > 0) {
+        try {
+          await exchange.updateLeverage({
+            asset: assetIndex,
+            isCross: true,
+            leverage: params.leverage,
+          })
+        } catch (e) {
+          console.warn('Failed to update leverage:', e)
+          // Continue with order — leverage may already be set
+        }
+      }
 
       let limitPx: string
       if (isMarket) {
@@ -73,18 +92,20 @@ export function usePlaceOrder() {
         limitPx = roundPrice(parseFloat(params.price))
       }
 
-      if (parseFloat(params.size) <= 0) {
+      // Round size to szDecimals
+      const rawSize = parseFloat(params.size)
+      if (rawSize <= 0) {
         setError('Enter a valid size')
         setPlacing(false)
         return null
       }
+      const roundedSize = rawSize.toFixed(market.szDecimals)
 
       // Check if we need TP/SL trigger orders
       const hasTp = params.tpPrice && parseFloat(params.tpPrice) > 0
       const hasSl = params.slPrice && parseFloat(params.slPrice) > 0
 
       if (hasTp || hasSl) {
-        // Submit main order + TP/SL as grouped orders
         const orders: Array<{
           a: number; b: boolean; p: string; s: string; r: boolean
           t: { limit: { tif: string } } | { trigger: { isMarket: boolean; triggerPx: string; tpsl: string } }
@@ -93,7 +114,7 @@ export function usePlaceOrder() {
             a: assetIndex,
             b: isBuy,
             p: limitPx,
-            s: params.size,
+            s: roundedSize,
             r: params.reduceOnly ?? false,
             t: { limit: { tif: isMarket ? 'FrontendMarket' : (params.tif || 'Gtc') } },
           },
@@ -102,9 +123,9 @@ export function usePlaceOrder() {
         if (hasTp) {
           orders.push({
             a: assetIndex,
-            b: !isBuy, // opposite side to close
+            b: !isBuy,
             p: roundPrice(parseFloat(params.tpPrice!)),
-            s: params.size,
+            s: roundedSize,
             r: true,
             t: { trigger: { isMarket: true, triggerPx: roundPrice(parseFloat(params.tpPrice!)), tpsl: 'tp' } },
           })
@@ -114,7 +135,7 @@ export function usePlaceOrder() {
             a: assetIndex,
             b: !isBuy,
             p: roundPrice(parseFloat(params.slPrice!)),
-            s: params.size,
+            s: roundedSize,
             r: true,
             t: { trigger: { isMarket: true, triggerPx: roundPrice(parseFloat(params.slPrice!)), tpsl: 'sl' } },
           })
@@ -128,13 +149,12 @@ export function usePlaceOrder() {
         setLastResult(result)
         return result
       } else {
-        // Simple order without TP/SL
         const result = await exchange.order({
           orders: [{
             a: assetIndex,
             b: isBuy,
             p: limitPx,
-            s: params.size,
+            s: roundedSize,
             r: params.reduceOnly ?? false,
             t: { limit: { tif: isMarket ? 'FrontendMarket' : (params.tif || 'Gtc') } },
           }],
@@ -148,11 +168,13 @@ export function usePlaceOrder() {
       console.error('Failed to place order:', e)
       const msg = e instanceof Error ? e.message : String(e)
       if (msg.includes('ApiRequestError')) {
-        setError('Order rejected by Hyperliquid. Check size, price, and margin.')
-      } else if (msg.includes('AbstractWalletError') || msg.includes('signTypedData')) {
-        setError('Wallet signature rejected or failed.')
+        setError('Order rejected. Check size, price, and margin.')
+      } else if (msg.includes('AbstractWalletError') || msg.includes('signTypedData') || msg.includes('viem wallet')) {
+        setError('Wallet signing failed. Switch to Arbitrum chain and try again.')
+      } else if (msg.includes('insufficient')) {
+        setError('Insufficient balance for this order.')
       } else {
-        setError(msg)
+        setError(msg.slice(0, 150))
       }
       return null
     } finally {

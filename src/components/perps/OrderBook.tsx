@@ -16,7 +16,7 @@ const SPREAD_HEIGHT = 28
 const GROUPINGS = [0.01, 0.1, 1, 10, 100]
 type ViewMode = 'both' | 'bids' | 'asks'
 
-function groupLevels(levels: OrderBookLevel[], grouping: number): OrderBookLevel[] {
+function groupLevels(levels: OrderBookLevel[], grouping: number, isBids: boolean): OrderBookLevel[] {
   const grouped = new Map<string, number>()
   for (const level of levels) {
     const px = parseFloat(level.price)
@@ -25,8 +25,12 @@ function groupLevels(levels: OrderBookLevel[], grouping: number): OrderBookLevel
     )
     grouped.set(rounded, (grouped.get(rounded) || 0) + parseFloat(level.size))
   }
+  // Sort by price: bids descending, asks ascending
+  const sorted = Array.from(grouped.entries()).sort((a, b) =>
+    isBids ? parseFloat(b[0]) - parseFloat(a[0]) : parseFloat(a[0]) - parseFloat(b[0])
+  )
   let cumulative = 0
-  return Array.from(grouped.entries()).map(([price, size]) => {
+  return sorted.map(([price, size]) => {
     cumulative += size
     return { price, size: size.toString(), total: cumulative }
   })
@@ -80,8 +84,8 @@ export function OrderBook({ onPriceClick, onSizeClick }: OrderBookProps = {}) {
     return () => observer.disconnect()
   }, [calcLevels])
 
-  const groupedAsks = useMemo(() => groupLevels(book.asks, grouping), [book.asks, grouping])
-  const groupedBids = useMemo(() => groupLevels(book.bids, grouping), [book.bids, grouping])
+  const groupedAsks = useMemo(() => groupLevels(book.asks, grouping, false), [book.asks, grouping])
+  const groupedBids = useMemo(() => groupLevels(book.bids, grouping, true), [book.bids, grouping])
 
   const asks = groupedAsks.slice(0, maxLevels)
   const bids = groupedBids.slice(0, maxLevels)

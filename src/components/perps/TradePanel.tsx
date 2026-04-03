@@ -68,6 +68,7 @@ export function TradePanel() {
       reduceOnly,
       tpPrice: showTpSl && tpPrice ? tpPrice : undefined,
       slPrice: showTpSl && slPrice ? slPrice : undefined,
+      leverage,
     })
   }
 
@@ -258,7 +259,7 @@ export function TradePanel() {
       ) : !isApproved ? (
         <button
           className="trade-submit transfer"
-          onClick={() => { switchToArbitrum(); approve() }}
+          onClick={async () => { switchToArbitrum(); setTimeout(approve, 1000) }}
           disabled={approving}
         >
           {approving ? 'Approving...' : 'Enable Trading (one-time signature)'}

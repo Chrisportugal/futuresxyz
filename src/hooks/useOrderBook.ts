@@ -61,11 +61,13 @@ export function useOrderBook(market: string) {
         const spread = bestAsk - bestBid
         const mid = (bestAsk + bestBid) / 2
         const spreadPct = mid > 0 ? ((spread / mid) * 100).toFixed(3) : '0'
+        // Format spread based on price magnitude
+        const spreadStr = spread >= 1 ? spread.toFixed(2) : spread >= 0.001 ? spread.toFixed(4) : spread.toFixed(6)
 
         setBook({
           bids,
           asks,
-          spread: spread.toFixed(2),
+          spread: spreadStr,
           spreadPct,
         })
       }

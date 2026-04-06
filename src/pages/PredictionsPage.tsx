@@ -12,6 +12,39 @@ interface Market {
   endDate: string
   category: Category
   hot: boolean
+  traders?: number
+}
+
+// Mini sparkline SVG for market cards
+function Sparkline({ points, color, width = 60, height = 20 }: { points: number[]; color: string; width?: number; height?: number }) {
+  if (points.length < 2) return null
+  const min = Math.min(...points)
+  const max = Math.max(...points)
+  const range = max - min || 1
+  const step = width / (points.length - 1)
+  const path = points.map((p, i) => {
+    const x = i * step
+    const y = height - ((p - min) / range) * (height - 4) - 2
+    return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`
+  }).join(' ')
+  return (
+    <svg width={width} height={height} style={{ flexShrink: 0 }}>
+      <path d={path} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// Generate deterministic sparkline data from market id + price
+function genSparkline(id: number, price: number): number[] {
+  const pts: number[] = []
+  let v = price - 0.1
+  for (let i = 0; i < 12; i++) {
+    v += (Math.sin(id * 7 + i * 1.3) * 0.04) + (Math.cos(id * 3 + i * 0.7) * 0.02)
+    v = Math.max(0.02, Math.min(0.98, v))
+    pts.push(v)
+  }
+  pts.push(price) // end at current price
+  return pts
 }
 
 interface Comment {
@@ -23,7 +56,7 @@ interface Comment {
 
 const EVENTS: Market[] = [
   // Crypto
-  { id: 1, title: 'BTC above $70k by end of April?', yesPrice: 0.62, volume: '$1.2M', volNum: 1200000, endDate: 'Apr 30', category: 'Crypto', hot: true },
+  { id: 1, title: 'BTC above $70k by end of April?', yesPrice: 0.62, volume: '$1.2M', volNum: 1200000, endDate: 'Apr 30', category: 'Crypto', hot: true, traders: 1843 },
   { id: 2, title: 'ETH above $4k by Q2 2026?', yesPrice: 0.34, volume: '$890K', volNum: 890000, endDate: 'Jun 30', category: 'Crypto', hot: false },
   { id: 4, title: 'HYPE above $20 by June?', yesPrice: 0.45, volume: '$520K', volNum: 520000, endDate: 'Jun 30', category: 'Crypto', hot: true },
   { id: 5, title: 'SOL flips ETH in TVL?', yesPrice: 0.12, volume: '$340K', volNum: 340000, endDate: 'Dec 31', category: 'Crypto', hot: false },
@@ -293,6 +326,26 @@ function MarketView({ market, onBack, onOpenMarket }: { market: Market; onBack: 
           <div className="featured-bar-no" style={{ width: `${noPct}%` }}>No {noPct}%</div>
         </div>
 
+        {/* Probability Chart */}
+        <div className="pred-chart-area">
+          <div className="pred-chart-header">
+            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-0)' }}>Probability</span>
+            <div className="pred-chart-timeframes">
+              {['1D', '1W', '1M', 'All'].map(tf => (
+                <button key={tf} className={`pred-chart-tf ${tf === '1M' ? 'active' : ''}`}>{tf}</button>
+              ))}
+            </div>
+          </div>
+          <div className="pred-chart-svg">
+            <Sparkline
+              points={genSparkline(market.id, market.yesPrice)}
+              color={market.yesPrice >= 0.5 ? 'var(--green)' : 'var(--red)'}
+              width={500}
+              height={120}
+            />
+          </div>
+        </div>
+
         {/* Rules */}
         <div className="pred-rules" style={{ marginTop: 0 }}>
           <div className="pred-rules-title">Rules</div>
@@ -488,8 +541,16 @@ export function PredictionsPage() {
     })
   }
 
-  // Featured: highest volume market
-  const featured = useMemo(() => [...EVENTS].sort((a, b) => b.volNum - a.volNum)[0], [])
+  // Featured: top 5 by volume, carousel
+  const topMarkets = useMemo(() => [...EVENTS].sort((a, b) => b.volNum - a.volNum).slice(0, 5), [])
+  const [featuredIdx, setFeaturedIdx] = useState(0)
+  const featured = topMarkets[featuredIdx]
+
+  // Auto-rotate featured every 8 seconds
+  useEffect(() => {
+    const timer = setInterval(() => setFeaturedIdx(i => (i + 1) % topMarkets.length), 8000)
+    return () => clearInterval(timer)
+  }, [topMarkets.length])
   const openMarket = EVENTS.find(e => e.id === openMarketId)
 
   const filtered = useMemo(() => {
@@ -599,6 +660,15 @@ export function PredictionsPage() {
       <div className="pred-layout">
         <div className="pred-main" style={{ padding: 4 }}>
           <FeaturedMarket market={featured} />
+          <div className="pred-carousel-dots">
+            {topMarkets.map((_, i) => (
+              <button
+                key={i}
+                className={`pred-carousel-dot ${i === featuredIdx ? 'active' : ''}`}
+                onClick={() => setFeaturedIdx(i)}
+              />
+            ))}
+          </div>
 
           {/* Search + Sort bar */}
           <div className="pred-controls">
@@ -647,6 +717,13 @@ export function PredictionsPage() {
                   </span>
                 </div>
                 <div className="pred-card-title">{e.title}</div>
+                <div className="pred-card-chart-row">
+                  <Sparkline points={genSparkline(e.id, e.yesPrice)} color={e.yesPrice >= 0.5 ? 'var(--green)' : 'var(--red)'} />
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: e.yesPrice >= 0.5 ? 'var(--green)' : 'var(--red)' }}>{Math.round(e.yesPrice * 100)}%</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-3)' }}>chance</div>
+                  </div>
+                </div>
                 <div className="pred-card-bar">
                   <div className="pred-card-bar-fill" style={{ width: `${e.yesPrice * 100}%` }} />
                 </div>

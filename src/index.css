@@ -2932,7 +2932,8 @@ body {
   flex: 1;
   display: flex;
   gap: 6px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .pred-detail-main {
   flex: 1;
@@ -2943,6 +2944,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 20px;
+  min-height: 0;
 }
 .pred-detail-side {
   width: 300px;
@@ -3355,6 +3357,70 @@ body {
 }
 .pred-card-star:hover { color: #f59e0b; }
 .pred-card-star.active { color: #f59e0b; }
+
+/* Featured carousel dots */
+.pred-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: -4px 0 6px;
+}
+.pred-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-3);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+.pred-carousel-dot:hover { background: var(--text-3); }
+.pred-carousel-dot.active { background: var(--blue); width: 20px; border-radius: 4px; }
+
+/* Card chart row (sparkline + percentage) */
+.pred-card-chart-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Probability chart in detail view */
+.pred-chart-area {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.pred-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.pred-chart-timeframes { display: flex; gap: 4px; }
+.pred-chart-tf {
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.pred-chart-tf:hover { color: var(--text-1); border-color: var(--border-hover); }
+.pred-chart-tf.active { color: var(--text-0); background: var(--blue-bg); border-color: var(--blue); }
+.pred-chart-svg {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+.pred-chart-svg svg { width: 100%; height: auto; }
 
 /* Share button */
 .pred-share-btn {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 const CATEGORIES = ['Trending', 'Breaking', 'New', 'Politics', 'Sports', 'Crypto', 'Esports', 'Finance', 'Geopolitics', 'Tech', 'Culture', 'Economy', 'Weather', 'Elections'] as const
 type Category = typeof CATEGORIES[number]
@@ -433,12 +433,64 @@ export function PredictionsPage() {
 
   const handleOpen = (id: number) => { setOpenMarketId(id) }
 
+  const catIcons: Record<string, React.ReactNode> = {
+    'Trending': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>,
+    'Breaking': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>,
+    'New': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>,
+    'Politics': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 21h18M3 7v1a3 3 0 006 0V7m0 0a3 3 0 006 0m0 0a3 3 0 006 0V7H3"/><path d="M6 21V11m12 10V11"/></svg>,
+    'Sports': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 014 10 15 15 0 01-4 10 15 15 0 01-4-10 15 15 0 014-10z"/><path d="M2 12h20"/></svg>,
+    'Crypto': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 8h6m-6 4h6m-6 4h4M6 3h12l4 4v14a2 2 0 01-2 2H4a2 2 0 01-2-2V5l4-2z"/></svg>,
+    'Esports': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4m-2-2v4m8-1h.01m2-2h.01"/></svg>,
+    'Finance': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>,
+    'Geopolitics': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a16 16 0 014 10 16 16 0 01-4 10 16 16 0 01-4-10A16 16 0 0112 2z"/></svg>,
+    'Tech': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>,
+    'Culture': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 11a9 9 0 0118 0"/><path d="M12 11V2"/><rect x="2" y="11" width="20" height="11" rx="2"/></svg>,
+    'Economy': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
+    'Weather': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>,
+    'Elections': <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>,
+  }
+
+  const VISIBLE_COUNT = 8
+  const visibleCats = CATEGORIES.slice(0, VISIBLE_COUNT)
+  const moreCats = CATEGORIES.slice(VISIBLE_COUNT)
+  const [moreOpen, setMoreOpen] = useState(false)
+  const moreRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) setMoreOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const isMoreActive = moreCats.some(c => c === category)
+
   const topbar = (
     <div className="pred-topbar">
       <button className={`pred-topbar-tab ${category === 'All' ? 'active' : ''}`} onClick={() => { setCategory('All'); setOpenMarketId(null) }}>All</button>
-      {CATEGORIES.map(c => (
-        <button key={c} className={`pred-topbar-tab ${category === c ? 'active' : ''}`} onClick={() => { setCategory(c); setOpenMarketId(null) }}>{c}</button>
+      {visibleCats.map(c => (
+        <button key={c} className={`pred-topbar-tab ${category === c ? 'active' : ''}`} onClick={() => { setCategory(c); setOpenMarketId(null) }}>
+          {catIcons[c]}{c}
+        </button>
       ))}
+      {moreCats.length > 0 && (
+        <div ref={moreRef} style={{ position: 'relative' }}>
+          <button className={`pred-topbar-tab ${isMoreActive ? 'active' : ''}`} onClick={() => setMoreOpen(o => !o)}>
+            More
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginLeft: 2, transform: moreOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          {moreOpen && (
+            <div className="pred-more-dropdown">
+              {moreCats.map(c => (
+                <button key={c} className={`pred-more-item ${category === c ? 'active' : ''}`} onClick={() => { setCategory(c); setOpenMarketId(null); setMoreOpen(false) }}>
+                  {catIcons[c]}{c}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 

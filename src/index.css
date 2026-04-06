@@ -201,11 +201,11 @@ body {
 
 /* Light theme: glass nav + 3D tabs */
 [data-theme="light"] .nav {
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.25);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border-bottom: 1px solid rgba(255,255,255,0.6);
-  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.03);
 }
 [data-theme="light"] .nav-tab {
   border-bottom: none;
@@ -216,20 +216,20 @@ body {
   transform: perspective(800px) rotateX(0deg);
 }
 [data-theme="light"] .nav-tab:hover {
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.25);
   transform: perspective(800px) rotateX(-2deg) translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
 [data-theme="light"] .nav-tab.active {
-  background: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.4);
   border-bottom: none;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
   transform: perspective(800px) rotateX(-3deg) translateY(-2px);
 }
 [data-theme="light"] .nav-tabs {
   gap: 4px;
   padding: 4px;
-  background: rgba(0,0,0,0.04);
+  background: rgba(0,0,0,0.03);
   border-radius: 12px;
 }
 
@@ -2462,13 +2462,15 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow-x: auto;
+  overflow: visible;
   max-width: 1100px;
   margin: 0 auto;
   width: calc(100% - 80px);
+  position: relative;
+  z-index: 10;
 }
 .pred-topbar-tab {
-  padding: 6px 16px;
+  padding: 6px 14px;
   border-radius: 6px;
   border: none;
   background: transparent;
@@ -2479,9 +2481,59 @@ body {
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
+.pred-topbar-tab svg { flex-shrink: 0; opacity: 0.7; }
+.pred-topbar-tab.active svg { opacity: 1; }
 .pred-topbar-tab:hover { color: var(--text-1); background: var(--bg-2); }
 .pred-topbar-tab.active { color: var(--text-0); background: var(--blue-bg); font-weight: 600; }
+
+/* More dropdown */
+.pred-more-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 180px;
+  background: var(--bg-1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 100;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.pred-more-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.12s;
+  text-align: left;
+  white-space: nowrap;
+}
+.pred-more-item:hover { color: var(--text-0); background: var(--bg-2); }
+.pred-more-item.active { color: var(--text-0); background: var(--blue-bg); font-weight: 600; }
+.pred-more-item svg { flex-shrink: 0; opacity: 0.7; }
+[data-theme="light"] .pred-more-dropdown {
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.4);
+}
 
 .pred-layout {
   flex: 1;
@@ -3017,14 +3069,30 @@ body {
 .pred-hot-title svg { color: var(--text-2); flex-shrink: 0; }
 
 /* Light theme: glass prediction cards */
-[data-theme="light"] .pred-topbar,
+[data-theme="light"] .pred-topbar {
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+[data-theme="light"] .pred-topbar-tab {
+  color: rgba(26,26,46,0.5);
+}
+[data-theme="light"] .pred-topbar-tab:hover {
+  color: rgba(26,26,46,0.7);
+  background: rgba(255,255,255,0.15);
+}
+[data-theme="light"] .pred-topbar-tab.active {
+  color: #1a1a2e;
+  background: rgba(255,255,255,0.3);
+}
 [data-theme="light"] .pred-card,
 [data-theme="light"] .pred-trade-card,
 [data-theme="light"] .pred-hot-card {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.2);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.3);
 }
 [data-theme="light"] .pred-card:hover {
   box-shadow: 0 8px 24px rgba(0,0,0,0.06);

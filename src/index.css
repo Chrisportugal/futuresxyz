@@ -2820,7 +2820,8 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  margin-bottom: 8px;
+  margin: 0 auto 8px;
+  max-width: 700px;
 }
 .featured-left {
   flex: 1;

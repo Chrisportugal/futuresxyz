@@ -1224,7 +1224,41 @@ body {
 }
 .tp-tif-select:focus { border-color: var(--blue); }
 
-/* Deposit/Withdraw section */
+/* Hyperliquid-style deposit/withdraw */
+.tp-hl-deposit {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--green);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.tp-hl-deposit:hover { opacity: 0.85; }
+.tp-hl-actions {
+  display: flex;
+  gap: 6px;
+}
+.tp-hl-action-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tp-hl-action-btn:hover { border-color: var(--border-hover); color: var(--text-0); }
+
+/* Deposit/Withdraw section (legacy) */
 .tp-deposit-section {
   display: flex; gap: 8px; align-items: center; padding-top: 8px;
   border-top: 1px solid var(--border);

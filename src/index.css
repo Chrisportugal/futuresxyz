@@ -37,13 +37,13 @@
    THEME: Light — Glassmorphism
    ═══════════════════════════════════════════ */
 [data-theme="light"] {
-  --bg-0: rgba(255, 255, 255, 0.3);
-  --bg-1: rgba(255, 255, 255, 0.22);
-  --bg-2: rgba(255, 255, 255, 0.15);
-  --bg-3: rgba(255, 255, 255, 0.25);
-  --bg-4: rgba(255, 255, 255, 0.35);
-  --border: rgba(255, 255, 255, 0.35);
-  --border-hover: rgba(255, 255, 255, 0.5);
+  --bg-0: rgba(255, 255, 255, 0.15);
+  --bg-1: rgba(255, 255, 255, 0.12);
+  --bg-2: rgba(255, 255, 255, 0.08);
+  --bg-3: rgba(255, 255, 255, 0.14);
+  --bg-4: rgba(255, 255, 255, 0.2);
+  --border: rgba(255, 255, 255, 0.25);
+  --border-hover: rgba(255, 255, 255, 0.4);
   --text-0: #1a1a2e;
   --text-1: #2d2d44;
   --text-2: rgba(26, 26, 46, 0.65);
@@ -201,11 +201,11 @@ body {
 
 /* Light theme: glass nav + 3D tabs */
 [data-theme="light"] .nav {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border-bottom: 1px solid rgba(255,255,255,0.3);
-  box-shadow: 0 1px 8px rgba(0,0,0,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.02);
 }
 [data-theme="light"] .nav-tab {
   border-bottom: none;
@@ -216,12 +216,12 @@ body {
   transform: perspective(800px) rotateX(0deg);
 }
 [data-theme="light"] .nav-tab:hover {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
   transform: perspective(800px) rotateX(-2deg) translateY(-1px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
 [data-theme="light"] .nav-tab.active {
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.2);
   border-bottom: none;
   box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
   transform: perspective(800px) rotateX(-3deg) translateY(-2px);
@@ -3089,10 +3089,10 @@ body {
 [data-theme="light"] .pred-card,
 [data-theme="light"] .pred-trade-card,
 [data-theme="light"] .pred-hot-card {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
 }
 [data-theme="light"] .pred-card:hover {
   box-shadow: 0 8px 24px rgba(0,0,0,0.06);
@@ -3107,35 +3107,35 @@ body {
 }
 [data-theme="light"] .featured-market,
 [data-theme="light"] .pred-detail-main {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.1);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 /* ═══════════════════════════════════════════
    LIGHT THEME: Glassmorphism Overrides
    ═══════════════════════════════════════════ */
 [data-theme="light"] .market-header {
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.15);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 [data-theme="light"] .perps-chart-area,
 [data-theme="light"] .perps-book-area {
-  background: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 [data-theme="light"] .perps-trade-area {
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.12);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(255,255,255,0.5);
+  border-left: 1px solid rgba(255,255,255,0.2);
 }
 [data-theme="light"] .perps-bottom {
-  background: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -3143,59 +3143,59 @@ body {
   background: transparent;
 }
 [data-theme="light"] .trade-input-wrapper {
-  background: rgba(255,255,255,0.5);
-  border-color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.25);
 }
 [data-theme="light"] .trade-submit.buy { background: var(--green); }
 [data-theme="light"] .trade-submit.sell { background: var(--red); }
 [data-theme="light"] .tp-unified {
-  background: rgba(255,255,255,0.3);
-  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 10px;
 }
 [data-theme="light"] .tp-deposit-section {
-  background: rgba(255,255,255,0.3);
-  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 10px;
 }
 [data-theme="light"] .wallet-options {
-  background: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.3);
 }
 [data-theme="light"] .spot-dropdown,
 [data-theme="light"] .market-selector-dropdown {
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.45);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.3);
 }
 [data-theme="light"] .embed-header {
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.12);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 [data-theme="light"] .embed-fallback-card {
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.15);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.6);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.04);
 }
 [data-theme="light"] .dw-module {
-  background: rgba(255,255,255,0.3);
-  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 10px;
 }
 [data-theme="light"] .connect-btn.connected {
-  background: rgba(255,255,255,0.5);
-  border: 1px solid rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
 }
 [data-theme="light"] .theme-toggle {
-  background: rgba(255,255,255,0.4);
-  border: 1px solid rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
 }
 [data-theme="light"] .order-confirm-overlay {
   background: rgba(180,195,215,0.5);

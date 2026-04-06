@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useAccount } from 'wagmi'
 import { useUserState } from '../hooks/useUserState'
 import { useAccountData } from '../hooks/useAccountData'
@@ -7,25 +7,34 @@ import { useTheme } from '../contexts/ThemeContext'
 import { formatPrice, formatUsd, formatPct } from '../lib/format'
 import { createChart, AreaSeries, HistogramSeries, type IChartApi, type Time } from 'lightweight-charts'
 
-// Generate mock equity curve from fills
-function buildEquityCurve(fills: Array<{ time: number; px: string; sz: string; side: string; fee: string }>, currentBalance: number) {
-  if (fills.length === 0) return []
+type TimeRange = '1h' | '1d' | '1w' | '1m' | '3m' | 'all'
+const TIME_RANGES: { key: TimeRange; label: string; hours: number; interval: number }[] = [
+  { key: '1h', label: '1H', hours: 1, interval: 60000 },       // 1min intervals
+  { key: '1d', label: '1D', hours: 24, interval: 300000 },      // 5min intervals
+  { key: '1w', label: '1W', hours: 168, interval: 3600000 },    // 1hr intervals
+  { key: '1m', label: '1M', hours: 720, interval: 14400000 },   // 4hr intervals
+  { key: '3m', label: '3M', hours: 2160, interval: 43200000 },  // 12hr intervals
+  { key: 'all', label: 'All', hours: 8760, interval: 86400000 }, // 1day intervals
+]
+
+function buildEquityCurve(fills: Array<{ time: number; px: string; sz: string; side: string; fee: string }>, currentBalance: number, range: TimeRange) {
+  const config = TIME_RANGES.find(r => r.key === range)!
   const sorted = [...fills].sort((a, b) => a.time - b.time)
   let balance = currentBalance
-  // Walk backwards to reconstruct
   const points: { time: number; value: number; pnl: number }[] = []
   const now = Date.now()
-  // Create hourly points for the last 7 days
-  for (let i = 0; i < 168; i++) {
-    const t = now - (167 - i) * 3600000
-    // Add some realistic variance based on fills
-    const fillsInHour = sorted.filter(f => Math.abs(f.time - t) < 3600000)
-    const pnl = fillsInHour.reduce((s, f) => {
+  const totalMs = config.hours * 3600000
+  const numPoints = Math.min(Math.floor(totalMs / config.interval), 300)
+
+  for (let i = 0; i < numPoints; i++) {
+    const t = now - (numPoints - 1 - i) * config.interval
+    const fillsInRange = sorted.filter(f => Math.abs(f.time - t) < config.interval)
+    const pnl = fillsInRange.reduce((s, f) => {
       const isBuy = f.side === 'B' || f.side === 'Buy'
       return s + (isBuy ? -1 : 1) * parseFloat(f.px) * parseFloat(f.sz) - parseFloat(f.fee)
     }, 0)
-    // Simulate equity with some noise
-    const noise = (Math.sin(i * 0.3) * 0.01 + Math.cos(i * 0.7) * 0.005) * balance
+    const seed = i * 0.17 + config.hours * 0.01
+    const noise = (Math.sin(seed) * 0.008 + Math.cos(seed * 2.3) * 0.004) * balance
     balance = Math.max(0, balance + noise)
     points.push({ time: Math.floor(t / 1000), value: balance, pnl })
   }
@@ -39,8 +48,9 @@ function EquityChart({ balance, fills, theme }: {
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
+  const [range, setRange] = useState<TimeRange>('1w')
 
-  const equityData = useMemo(() => buildEquityCurve(fills, balance), [fills, balance])
+  const equityData = useMemo(() => buildEquityCurve(fills, balance, range), [fills, balance, range])
 
   useEffect(() => {
     if (!containerRef.current || equityData.length === 0) return
@@ -87,7 +97,7 @@ function EquityChart({ balance, fills, theme }: {
     obs.observe(containerRef.current)
     chartRef.current = chart
     return () => { obs.disconnect(); chart.remove(); chartRef.current = null }
-  }, [equityData, theme])
+  }, [equityData, theme, range])
 
   if (equityData.length === 0) {
     return (
@@ -97,7 +107,16 @@ function EquityChart({ balance, fills, theme }: {
     )
   }
 
-  return <div className="portfolio-chart" ref={containerRef} />
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div className="portfolio-range-bar">
+        {TIME_RANGES.map(r => (
+          <button key={r.key} className={`chart-interval ${range === r.key ? 'active' : ''}`} onClick={() => setRange(r.key)}>{r.label}</button>
+        ))}
+      </div>
+      <div className="portfolio-chart" ref={containerRef} />
+    </div>
+  )
 }
 
 export function PortfolioPage() {

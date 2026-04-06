@@ -6,7 +6,6 @@ import { useUserState } from '../../hooks/useUserState'
 import { usePlaceOrder, type OrderSide, type OrderType, type Tif } from '../../hooks/usePlaceOrder'
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
 import { OrderConfirmModal } from './OrderConfirmModal'
-import { DepositWithdraw } from './DepositWithdraw'
 import { formatPrice, formatUsd } from '../../lib/format'
 
 const SIZE_MARKS = [0, 25, 50, 75, 100]
@@ -239,7 +238,7 @@ export function TradePanel() {
       ) : !exchange ? (
         <div className="trade-error">Wallet signer unavailable. Switch to Arbitrum.</div>
       ) : available <= 0 ? (
-        <button className="trade-submit add-funds" onClick={() => window.open('https://app.hyperliquid.xyz', '_blank')}>
+        <button className="trade-submit add-funds" onClick={() => window.open('https://app.hyperunit.xyz/deposit', '_blank')}>
           Not Enough Margin — Deposit
         </button>
       ) : (
@@ -300,7 +299,7 @@ export function TradePanel() {
         />
       )}
 
-      {/* Deposit / Withdraw via HyperUnit + Internal Transfer */}
+      {/* Deposit / Withdraw — like Hyperliquid */}
       {isConnected && (
         <div className="tp-deposit-section">
           <button className="tp-deposit-btn" onClick={() => window.open('https://app.hyperunit.xyz/deposit', '_blank')}>Deposit</button>
@@ -312,9 +311,6 @@ export function TradePanel() {
           <button className="tp-withdraw-btn" onClick={() => window.open('https://app.hyperunit.xyz/withdraw', '_blank')}>Withdraw</button>
         </div>
       )}
-
-      {/* Spot ↔ Perps internal transfer */}
-      {isConnected && exchange && <DepositWithdraw />}
 
       {/* Unified Account Summary — like Hyperliquid */}
       {isConnected && state && (

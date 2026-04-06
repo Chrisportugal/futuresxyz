@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useMarketMeta, type MarketInfo } from '../../hooks/useMarketMeta'
 import { useMarket } from '../../contexts/MarketContext'
 import { formatPrice } from '../../lib/format'
+import { TokenIcon } from '../TokenIcon'
 
 type SortField = 'name' | 'price' | 'change' | 'volume' | 'oi'
 type SortDir = 'asc' | 'desc'
@@ -38,6 +39,7 @@ function MarketRow({ market, isActive, isFav, onSelect, onToggleFav }: {
         {isFav ? '★' : '☆'}
       </span>
       <span className="mkt-symbol">
+        <TokenIcon symbol={market.name} size={18} />
         <span className="mkt-name">{market.name}-USDC</span>
         <span className="mkt-badge">{market.maxLeverage}x</span>
       </span>
@@ -150,6 +152,7 @@ export function MarketSelector() {
   return (
     <>
       <button className="market-selector-btn" onClick={() => setOpen(true)}>
+        <TokenIcon symbol={selectedMarket} size={22} />
         <span className="market-name">{selectedMarket}/USDC</span>
         <span className="market-arrow">▲</span>
       </button>

@@ -1,6 +1,7 @@
 import { useMarketMeta } from '../../hooks/useMarketMeta'
 import { useMarket } from '../../contexts/MarketContext'
 import { formatPrice } from '../../lib/format'
+import { TokenIcon } from '../TokenIcon'
 
 export function TickerBar() {
   const { markets } = useMarketMeta()
@@ -24,6 +25,7 @@ export function TickerBar() {
             className="ticker-item"
             onClick={() => setSelectedMarket(m.name)}
           >
+            <TokenIcon symbol={m.name} size={14} />
             <span className="ticker-coin">{m.name}</span>
             <span className="ticker-price">${formatPrice(m.midPrice)}</span>
             <span className={`ticker-change ${cls}`}>

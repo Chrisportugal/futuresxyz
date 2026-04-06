@@ -7,6 +7,7 @@ import { createChart, CandlestickSeries, HistogramSeries, type IChartApi, type I
 import { useTheme } from '../contexts/ThemeContext'
 import { Positions } from '../components/perps/Positions'
 import { TickerBar } from '../components/perps/TickerBar'
+import { TokenIcon } from '../components/TokenIcon'
 
 // ── Spot Chart ──
 function SpotChart({ coin, theme }: { coin: string; theme: 'dark' | 'light' }) {
@@ -95,6 +96,7 @@ function SpotSelector({ markets, selected, onSelect }: { markets: SpotMarket[]; 
   return (
     <div className="spot-selector" ref={dropRef}>
       <button className="market-selector-btn" onClick={() => setOpen(!open)}>
+        <TokenIcon symbol={selected.split('/')[0]} size={22} />
         <span className="market-name">{selected}</span>
         <span className="market-arrow">{open ? '▲' : '▼'}</span>
       </button>
@@ -113,6 +115,7 @@ function SpotSelector({ markets, selected, onSelect }: { markets: SpotMarket[]; 
               const volStr = vol >= 1e6 ? `$${(vol / 1e6).toFixed(1)}M` : vol >= 1e3 ? `$${(vol / 1e3).toFixed(0)}K` : `$${vol.toFixed(0)}`
               return (
                 <button key={m.name} className={`spot-dd-item ${m.pairName === selected ? 'active' : ''}`} onClick={() => { onSelect(m.pairName); setOpen(false); setSearch('') }}>
+                  <TokenIcon symbol={m.name} size={16} />
                   <span className="spot-dd-name">{m.pairName}</span>
                   <span className="spot-dd-price">${formatPrice(m.markPx)}</span>
                   <span className={m.change24h >= 0 ? 'green' : 'red'}>{m.change24h >= 0 ? '+' : ''}{m.change24h.toFixed(1)}%</span>

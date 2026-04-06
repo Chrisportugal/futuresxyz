@@ -27,7 +27,7 @@ function SpotChart({ coin, theme }: { coin: string; theme: 'dark' | 'light' }) {
       handleScroll: { mouseWheel: true, pressedMouseMove: true },
       handleScale: { mouseWheel: true, pinch: true },
     })
-    const up = isDark ? '#2dd4bf' : '#059669'
+    const up = isDark ? '#22c55e' : '#059669'
     const down = isDark ? '#ef4444' : '#dc2626'
     const series = chart.addSeries(CandlestickSeries, { upColor: up, downColor: down, borderUpColor: up, borderDownColor: down, wickUpColor: up, wickDownColor: down })
     const vol = chart.addSeries(HistogramSeries, { priceFormat: { type: 'volume' }, priceScaleId: 'vol' })
@@ -49,7 +49,7 @@ function SpotChart({ coin, theme }: { coin: string; theme: 'dark' | 'light' }) {
     info.candleSnapshot({ coin, interval: chartInterval, startTime: now - 7 * 86400000, endTime: now }).then((raw: unknown) => {
       const candles = raw as Array<{ t: number; o: string; h: string; l: string; c: string; v: string }>
       const cd: CandlestickData<Time>[] = candles.map(c => ({ time: Math.floor(c.t / 1000) as Time, open: parseFloat(c.o), high: parseFloat(c.h), low: parseFloat(c.l), close: parseFloat(c.c) }))
-      const vd: HistogramData<Time>[] = candles.map(c => ({ time: Math.floor(c.t / 1000) as Time, value: parseFloat(c.v), color: parseFloat(c.c) >= parseFloat(c.o) ? (isDark ? 'rgba(45,212,191,0.25)' : 'rgba(20,184,166,0.25)') : (isDark ? 'rgba(239,68,68,0.25)' : 'rgba(220,38,38,0.25)') }))
+      const vd: HistogramData<Time>[] = candles.map(c => ({ time: Math.floor(c.t / 1000) as Time, value: parseFloat(c.v), color: parseFloat(c.c) >= parseFloat(c.o) ? (isDark ? 'rgba(34,197,94,0.25)' : 'rgba(20,184,166,0.25)') : (isDark ? 'rgba(239,68,68,0.25)' : 'rgba(220,38,38,0.25)') }))
       seriesRef.current?.setData(cd)
       volRef.current?.setData(vd)
       chartRef.current?.timeScale().fitContent()

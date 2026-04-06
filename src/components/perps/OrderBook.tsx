@@ -45,7 +45,7 @@ function LevelRow({ level, maxTotal, side, onPriceClick, onSizeClick }: {
     <div className="ob-row">
       <div className="ob-depth" style={{
         width: `${pct}%`,
-        background: side === 'bid' ? 'rgba(45, 212, 191, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+        background: side === 'bid' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)',
         left: 0,
       }} />
       <span className={`ob-price ${side === 'bid' ? 'ob-bid' : 'ob-ask'}`} onClick={() => onPriceClick?.(level.price)}>

@@ -2908,6 +2908,40 @@ body {
 }
 .featured-book-row span { position: relative; z-index: 1; }
 
+/* Trending markets bar */
+.pred-markets-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.pred-markets-bar-left { flex-shrink: 0; }
+.pred-markets-title { font-size: 15px; font-weight: 700; color: var(--text-0); }
+.pred-markets-pills {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pred-markets-pills::-webkit-scrollbar { display: none; }
+.pred-market-pill {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.pred-market-pill:hover { border-color: var(--border-hover); color: var(--text-0); background: var(--bg-3); }
+
 /* Market detail stats */
 .market-detail-stats { display: flex; gap: 24px; margin-bottom: 16px; }
 .market-detail-stats > div { display: flex; flex-direction: column; gap: 2px; }

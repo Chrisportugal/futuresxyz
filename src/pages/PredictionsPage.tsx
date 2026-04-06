@@ -316,6 +316,21 @@ export function PredictionsPage() {
       <div className="pred-layout">
         <div className="pred-main" style={{ padding: 4 }}>
           <FeaturedMarket market={featured} />
+
+          {/* Trending markets bar */}
+          <div className="pred-markets-bar">
+            <div className="pred-markets-bar-left">
+              <span className="pred-markets-title">Trending markets</span>
+            </div>
+            <div className="pred-markets-pills">
+              {EVENTS.filter(e => e.hot).slice(0, 6).map(e => (
+                <button key={e.id} className="pred-market-pill" onClick={() => handleOpen(e.id)}>
+                  {e.title.length > 25 ? e.title.slice(0, 25) + '...' : e.title}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="pred-grid">
             {rest.map(e => (
               <button key={e.id} className="pred-card" onClick={() => handleOpen(e.id)}>

@@ -22,7 +22,7 @@ export function TradePanel() {
   const [orderType, setOrderType] = useState<OrderType>('market')
   const [size, setSize] = useState('')
   const [price, setPrice] = useState('')
-  const [tif] = useState<Tif>('Gtc')
+  const tif: Tif = 'Gtc'
   const [leverage, setLeverage] = useState(20)
   const [reduceOnly, setReduceOnly] = useState(false)
   const [showTpSl, setShowTpSl] = useState(false)
@@ -270,7 +270,7 @@ export function TradePanel() {
         </div>
         <div className="tp-summary-row">
           <span>Slippage</span>
-          <span>{orderType === 'market' ? 'Est: 3.00% max' : 'N/A (limit)'}</span>
+          <span>{orderType === 'market' ? 'Max 3%' : '--'}</span>
         </div>
         <div className="tp-summary-row">
           <span>Fees</span>

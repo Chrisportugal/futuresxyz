@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useUserState } from '../../hooks/useUserState'
 import { useAccountData } from '../../hooks/useAccountData'
 import { usePlaceOrder } from '../../hooks/usePlaceOrder'
@@ -22,6 +22,11 @@ export function Positions() {
   const [closingCoin, setClosingCoin] = useState<string | null>(null)
   const [cancellingOid, setCancellingOid] = useState<number | null>(null)
   const [cancellingAll, setCancellingAll] = useState(false)
+
+  const sortedBalances = useMemo(
+    () => [...spotBalances].sort((a, b) => parseFloat(b.usdValue) - parseFloat(a.usdValue)),
+    [spotBalances]
+  )
 
   const handleClosePosition = async (coin: string, szi: string) => {
     const isLong = parseFloat(szi) > 0
@@ -249,9 +254,7 @@ export function Positions() {
                   <span>USDC Value</span>
                   <span>PNL (ROE %)</span>
                 </div>
-                {[...spotBalances]
-                  .sort((a, b) => parseFloat(b.usdValue) - parseFloat(a.usdValue))
-                  .map(b => {
+                {sortedBalances.map(b => {
                     const pnl = parseFloat(b.pnl)
                     const pnlPct = parseFloat(b.pnlPct)
                     return (
@@ -312,7 +315,7 @@ export function Positions() {
           {tab === 'twap' && (
             <div className="pos-empty-state">
               <div className="pos-empty-icon">--</div>
-              <div className="pos-empty-text">No TWAP orders</div>
+              <div className="pos-empty-text">TWAP orders coming soon</div>
             </div>
           )}
 
@@ -320,7 +323,7 @@ export function Positions() {
           {tab === 'funding' && (
             <div className="pos-empty-state">
               <div className="pos-empty-icon">--</div>
-              <div className="pos-empty-text">No funding history</div>
+              <div className="pos-empty-text">Funding history coming soon</div>
             </div>
           )}
         </>

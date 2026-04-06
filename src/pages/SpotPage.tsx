@@ -109,15 +109,18 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
   const { isConnected, exchange, agentApproved, approving, approveAgent, switchToArbitrum } = useHyperliquid()
   const { state } = useUserState()
   const [side, setSide] = useState<'buy' | 'sell'>('buy')
-  const [usdcAmount, setUsdcAmount] = useState('')  // Input in USDC
+  const [orderType, setOrderType] = useState<'market' | 'limit'>('market')
+  const [limitPrice, setLimitPrice] = useState('')
+  const [usdcAmount, setUsdcAmount] = useState('')
   const [placing, setPlacing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [sizePct, setSizePct] = useState(0)
 
   const price = market ? parseFloat(market.markPx) : 0
   const usdcNum = parseFloat(usdcAmount) || 0
-  // Convert USDC input to token amount
   const tokenAmount = price > 0 ? usdcNum / price : 0
+  const spotBalance = state ? parseFloat(state.spotUSDC) : 0
 
   const handleSpotOrder = async () => {
     if (!market || tokenAmount <= 0 || price <= 0) return
@@ -182,11 +185,6 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
     }
   }
 
-  const spotBalance = state ? parseFloat(state.spotUSDC) : 0
-  const [sizePct, setSizePct] = useState(0)
-  const [orderType, setOrderType] = useState<'market' | 'limit'>('market')
-  const [limitPrice, setLimitPrice] = useState('')
-
   const handleSizePct = (pct: number) => {
     setSizePct(pct)
     if (spotBalance > 0) {
@@ -208,7 +206,6 @@ function SpotTradePanel({ market }: { market: SpotMarket | undefined }) {
         <button className={`trade-side-btn ${side === 'buy' ? 'active buy' : ''}`} onClick={() => setSide('buy')}>Buy</button>
         <button className={`trade-side-btn ${side === 'sell' ? 'active sell' : ''}`} onClick={() => setSide('sell')}>Sell</button>
       </div>
-      <div style={{ fontSize: 11, color: 'var(--text-3)', textAlign: 'center', marginTop: -4 }}>Swap via Hyperliquid spot order book</div>
 
       {/* Available + Price */}
       <div className="tp-info-rows">

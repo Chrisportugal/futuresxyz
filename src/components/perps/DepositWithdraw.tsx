@@ -48,8 +48,10 @@ export function DepositWithdraw() {
       const msg = e instanceof Error ? e.message : String(e)
       if (msg.includes('Insufficient')) {
         setError(`Insufficient balance. Check your ${mode === 'deposit' ? 'Spot' : 'Perps'} account.`)
+      } else if (msg.includes('rejected') || msg.includes('denied')) {
+        setError('Transaction rejected by wallet.')
       } else {
-        setError(msg || 'Transfer failed')
+        setError('Transfer failed. Please try again.')
       }
     } finally {
       setLoading(false)

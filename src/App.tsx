@@ -8,7 +8,6 @@ import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { ToastProvider } from './contexts/ToastContext'
 import { ConnectButton } from './components/shared/ConnectButton'
 import { PerpsPage } from './pages/PerpsPage'
-import { ProtocolsPage } from './pages/ProtocolsPage'
 import { PortfolioPage } from './pages/PortfolioPage'
 import { SpotPage } from './pages/SpotPage'
 import { DocsPage } from './pages/DocsPage'
@@ -95,7 +94,6 @@ function AppContent() {
           <Route path="/cdp" element={<CDPPage />} />
           <Route path="/staking" element={<StakingPage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
-          <Route path="/protocols" element={<ProtocolsPage />} />
           <Route path="/docs" element={<DocsPage />} />
           <Route path="*" element={<Navigate to="/perps" replace />} />
         </Routes>

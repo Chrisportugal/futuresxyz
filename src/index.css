@@ -6,13 +6,13 @@
    THEME: Dark (default) — Black/White/Blue
    ═══════════════════════════════════════════ */
 :root, [data-theme="dark"] {
-  --bg-0: #0e0f14;
-  --bg-1: #13141a;
-  --bg-2: #1a1b22;
-  --bg-3: #22232b;
-  --bg-4: #2c2d36;
-  --border: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.12);
+  --bg-0: rgba(14, 15, 20, 0.7);
+  --bg-1: rgba(19, 20, 26, 0.6);
+  --bg-2: rgba(26, 27, 34, 0.5);
+  --bg-3: rgba(34, 35, 43, 0.6);
+  --bg-4: rgba(44, 45, 54, 0.6);
+  --border: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(255, 255, 255, 0.14);
   --text-0: #f0f0f2;
   --text-1: #c8c9cf;
   --text-2: #8b8d97;
@@ -63,12 +63,32 @@
 
 body {
   font-family: var(--font);
-  background: var(--bg-0);
+  background: #08090d;
   color: var(--text-2);
   height: 100vh;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Dark theme: subtle gradient background */
+[data-theme="dark"] body,
+:root body {
+  background: linear-gradient(135deg, #08090d 0%, #0c0e18 25%, #0e1220 50%, #0c0e18 75%, #08090d 100%);
+  background-attachment: fixed;
+}
+[data-theme="dark"] body::before,
+:root body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 15%, rgba(37,99,235,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 85%, rgba(45,212,191,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="dark"] #root,
+:root #root { position: relative; z-index: 1; }
 
 /* Light theme: glass on muted blue-gray */
 [data-theme="light"] body {
@@ -103,6 +123,8 @@ body {
   top: 0;
   z-index: 100;
   background: var(--bg-0);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
 }
 
 .nav-left { display: flex; align-items: center; gap: 24px; }
@@ -294,6 +316,8 @@ body {
   padding: 10px 20px;
   border-bottom: 1px solid var(--border);
   background: var(--bg-1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   overflow-x: auto;
 }
 
@@ -542,6 +566,8 @@ body {
   min-height: 0;
   min-width: 0;
   background: var(--bg-1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   overflow: hidden;
 }
 
@@ -551,6 +577,8 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--bg-1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   min-height: 0;
 }
 
@@ -561,6 +589,8 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--bg-1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-left: 1px solid var(--border);
   min-height: 0;
 }
@@ -572,6 +602,8 @@ body {
   flex-shrink: 0;
   overflow: hidden;
   background: var(--bg-1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
 }

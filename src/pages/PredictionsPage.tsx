@@ -277,9 +277,8 @@ function FeaturedMarket({ market }: { market: Market }) {
 export function PredictionsPage() {
   const [category, setCategory] = useState<Category | 'All'>('All')
   const [openMarketId, setOpenMarketId] = useState<number | null>(null)
-  const [featuredId, setFeaturedId] = useState(EVENTS[0].id)
 
-  const featured = EVENTS.find(e => e.id === featuredId) || EVENTS[0]
+  const featured = EVENTS[0]
   const openMarket = EVENTS.find(e => e.id === openMarketId)
 
   const filtered = category === 'All' || category === 'Trending'
@@ -288,7 +287,6 @@ export function PredictionsPage() {
   const rest = filtered.filter(e => e.id !== featured.id)
 
   const handleOpen = (id: number) => { setOpenMarketId(id) }
-  void featuredId // used for featured selection
 
   // Detail view
   if (openMarket) {

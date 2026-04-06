@@ -6,11 +6,11 @@
    THEME: Dark (default) — Black/White/Blue
    ═══════════════════════════════════════════ */
 :root, [data-theme="dark"] {
-  --bg-0: rgba(8, 14, 30, 0.7);
-  --bg-1: rgba(12, 20, 40, 0.5);
-  --bg-2: rgba(16, 26, 50, 0.4);
-  --bg-3: rgba(20, 30, 55, 0.5);
-  --bg-4: rgba(26, 36, 62, 0.5);
+  --bg-0: rgba(8, 14, 30, 0.35);
+  --bg-1: rgba(12, 20, 40, 0.25);
+  --bg-2: rgba(16, 26, 50, 0.2);
+  --bg-3: rgba(20, 30, 55, 0.3);
+  --bg-4: rgba(26, 36, 62, 0.3);
   --border: rgba(80, 140, 255, 0.12);
   --border-hover: rgba(80, 140, 255, 0.22);
   --text-0: #e8eaf0;
@@ -36,29 +36,29 @@
    THEME: Light — Glassmorphism
    ═══════════════════════════════════════════ */
 [data-theme="light"] {
-  --bg-0: rgba(255, 255, 255, 0.1);
-  --bg-1: rgba(255, 255, 255, 0.08);
-  --bg-2: rgba(255, 255, 255, 0.06);
-  --bg-3: rgba(255, 255, 255, 0.12);
-  --bg-4: rgba(255, 255, 255, 0.15);
-  --border: rgba(255, 255, 255, 0.18);
-  --border-hover: rgba(255, 255, 255, 0.3);
-  --text-0: #ffffff;
-  --text-1: rgba(255, 255, 255, 0.85);
-  --text-2: rgba(255, 255, 255, 0.6);
-  --text-3: rgba(255, 255, 255, 0.4);
-  --blue: #60a5fa;
-  --blue-hover: #93bbfd;
-  --blue-bg: rgba(255, 255, 255, 0.1);
-  --green: #34d399;
-  --green-bg: rgba(52, 211, 153, 0.12);
-  --red: #f87171;
-  --red-bg: rgba(248, 113, 113, 0.12);
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  --glass: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-blur: blur(20px) saturate(1.2);
-  color-scheme: dark;
+  --bg-0: rgba(255, 255, 255, 0.45);
+  --bg-1: rgba(255, 255, 255, 0.35);
+  --bg-2: rgba(255, 255, 255, 0.25);
+  --bg-3: rgba(255, 255, 255, 0.4);
+  --bg-4: rgba(255, 255, 255, 0.5);
+  --border: rgba(255, 255, 255, 0.45);
+  --border-hover: rgba(255, 255, 255, 0.6);
+  --text-0: #1a1a2e;
+  --text-1: #2d2d44;
+  --text-2: rgba(26, 26, 46, 0.65);
+  --text-3: rgba(26, 26, 46, 0.45);
+  --blue: #2563eb;
+  --blue-hover: #1d4ed8;
+  --blue-bg: rgba(37, 99, 235, 0.1);
+  --green: #059669;
+  --green-bg: rgba(5, 150, 105, 0.1);
+  --red: #dc2626;
+  --red-bg: rgba(220, 38, 38, 0.1);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --glass: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --glass-blur: blur(20px) saturate(1.4);
+  color-scheme: light;
 }
 
 body {
@@ -70,7 +70,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Dark theme: deep navy blue gradient */
+/* Dark theme: deep navy blue gradient with visible glows */
 [data-theme="dark"] body,
 :root body {
   background: linear-gradient(145deg, #050a18 0%, #0a1530 30%, #101e40 50%, #0c1832 70%, #060b1a 100%);
@@ -82,18 +82,19 @@ body {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse at 30% 10%, rgba(59,130,246,0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 90%, rgba(59,130,246,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.04) 0%, transparent 60%);
+    radial-gradient(ellipse at 25% 15%, rgba(59,130,246,0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 80%, rgba(99,102,241,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 45%, rgba(45,212,191,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 20%, rgba(139,92,246,0.12) 0%, transparent 40%);
   pointer-events: none;
   z-index: 0;
 }
 [data-theme="dark"] #root,
 :root #root { position: relative; z-index: 1; }
 
-/* Light theme: blue with white flairs */
+/* Light theme: soft blue-gray with white flairs */
 [data-theme="light"] body {
-  background: linear-gradient(145deg, #1a3a6e 0%, #2050a0 30%, #2563eb 55%, #1d4ed8 75%, #1a3568 100%);
+  background: linear-gradient(135deg, #c5d3e8 0%, #b8cce5 25%, #afc4e0 50%, #b8cce5 75%, #c5d3e8 100%);
   background-attachment: fixed;
 }
 [data-theme="light"] body::before {
@@ -101,11 +102,11 @@ body {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse at 15% 20%, rgba(255,255,255,0.25) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 75%, rgba(255,255,255,0.15) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 15%, rgba(147,197,253,0.2) 0%, transparent 35%),
-    radial-gradient(ellipse at 30% 85%, rgba(96,165,250,0.15) 0%, transparent 40%);
+    radial-gradient(ellipse at 15% 20%, rgba(59,130,246,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 75%, rgba(45,212,191,0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 40%, rgba(139,92,246,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 15%, rgba(255,255,255,0.3) 0%, transparent 40%),
+    radial-gradient(ellipse at 30% 80%, rgba(255,255,255,0.2) 0%, transparent 40%);
   pointer-events: none;
   z-index: 0;
 }
@@ -152,11 +153,11 @@ body {
 
 /* Light theme: glass nav + 3D tabs */
 [data-theme="light"] .nav {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 1px 12px rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
 }
 [data-theme="light"] .nav-tab {
   border-bottom: none;
@@ -167,20 +168,20 @@ body {
   transform: perspective(800px) rotateX(0deg);
 }
 [data-theme="light"] .nav-tab:hover {
-  background: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.5);
   transform: perspective(800px) rotateX(-2deg) translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
 [data-theme="light"] .nav-tab.active {
-  background: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.7);
   border-bottom: none;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   transform: perspective(800px) rotateX(-3deg) translateY(-2px);
 }
 [data-theme="light"] .nav-tabs {
   gap: 4px;
   padding: 4px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.04);
   border-radius: 12px;
 }
 
@@ -2160,24 +2161,24 @@ body {
 
 /* Light theme: glass protocol pages */
 [data-theme="light"] .protocol-panel {
-  background: rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(255,255,255,0.12);
+  border-left: 1px solid rgba(255,255,255,0.5);
 }
 [data-theme="light"] .protocol-stat-card {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.45);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.5);
 }
 [data-theme="light"] .protocol-table {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.5);
 }
 [data-theme="light"] .protocol-table-header {
-  background: rgba(255,255,255,0.06);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.3);
+  border-bottom: 1px solid rgba(255,255,255,0.4);
 }
 
 /* ─── Predictions: Card Grid (Polymarket style) ─── */
@@ -2264,52 +2265,49 @@ body {
 
 /* Light theme: glass prediction cards */
 [data-theme="light"] .pred-card {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.5);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 [data-theme="light"] .pred-card:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  border-color: rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.12);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  border-color: rgba(255,255,255,0.8);
 }
 [data-theme="light"] .pred-card.active {
-  background: rgba(255,255,255,0.14);
-  border-color: rgba(255,255,255,0.3);
+  background: rgba(37,99,235,0.08);
+  border-color: rgba(37,99,235,0.3);
 }
 [data-theme="light"] .pred-card-badge {
-  background: rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.05);
 }
 [data-theme="light"] .pred-cat-btn.active {
-  background: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.25);
-  color: #fff;
+  background: rgba(37,99,235,0.1);
 }
 
 /* ═══════════════════════════════════════════
    LIGHT THEME: Glassmorphism Overrides
    ═══════════════════════════════════════════ */
 [data-theme="light"] .market-header {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255,255,255,0.12);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 [data-theme="light"] .perps-chart-area,
 [data-theme="light"] .perps-book-area {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.35);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 [data-theme="light"] .perps-trade-area {
-  background: rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(255,255,255,0.12);
+  border-left: 1px solid rgba(255,255,255,0.5);
 }
 [data-theme="light"] .perps-bottom {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.35);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -2317,66 +2315,66 @@ body {
   background: transparent;
 }
 [data-theme="light"] .trade-input-wrapper {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.5);
+  border-color: rgba(255,255,255,0.6);
 }
 [data-theme="light"] .trade-submit.buy { background: var(--green); }
 [data-theme="light"] .trade-submit.sell { background: var(--red); }
 [data-theme="light"] .tp-unified {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.4);
   border-radius: 10px;
 }
 [data-theme="light"] .tp-deposit-section {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.4);
   border-radius: 10px;
 }
 [data-theme="light"] .wallet-options {
-  background: rgba(20,50,100,0.9);
+  background: rgba(255,255,255,0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 [data-theme="light"] .spot-dropdown,
 [data-theme="light"] .market-selector-dropdown {
-  background: rgba(20,50,100,0.9);
+  background: rgba(255,255,255,0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 [data-theme="light"] .embed-header {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255,255,255,0.12);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 [data-theme="light"] .embed-fallback-card {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.5);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
 }
 [data-theme="light"] .dw-module {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.4);
   border-radius: 10px;
 }
 [data-theme="light"] .connect-btn.connected {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 [data-theme="light"] .theme-toggle {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.5);
 }
 [data-theme="light"] .order-confirm-overlay {
-  background: rgba(0,20,60,0.5);
+  background: rgba(180,195,215,0.5);
 }
 [data-theme="light"] .order-confirm-modal {
-  background: rgba(20,50,100,0.85);
+  background: rgba(255,255,255,0.75);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.6);
 }

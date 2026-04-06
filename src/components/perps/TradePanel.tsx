@@ -182,15 +182,16 @@ export function TradePanel() {
         )}
       </div>
 
-      {/* Slider with % input */}
+      {/* Thermometer slider with dots */}
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-        <div className="tp-slider-wrapper" style={{ flex: 1 }}>
-          <div className="tp-slider-dots">
+        <div className="thermo-wrapper" style={{ flex: 1 }}>
+          <div className="thermo-track">
+            <div className="thermo-fill" style={{ width: `${sizePct}%` }} />
             {SIZE_MARKS.map(pct => (
-              <button key={pct} className={`tp-slider-dot ${sizePct >= pct ? 'active' : ''}`} onClick={() => handleSizePct(pct)} />
+              <button key={pct} className={`thermo-dot ${sizePct >= pct ? 'active' : ''}`} style={{ left: `${pct}%` }} onClick={() => handleSizePct(pct)} />
             ))}
           </div>
-          <input type="range" className="tp-slider" min={0} max={100} value={sizePct} onChange={e => handleSizePct(parseInt(e.target.value))} />
+          <input type="range" className="thermo-input" min={0} max={100} value={sizePct} onChange={e => handleSizePct(parseInt(e.target.value))} />
         </div>
         <div className="trade-input-wrapper" style={{ width: 70, padding: '6px 8px' }}>
           <input type="number" className="trade-input" style={{ fontSize: 13 }} value={sizePct || ''} onChange={e => handleSizePct(parseInt(e.target.value) || 0)} />

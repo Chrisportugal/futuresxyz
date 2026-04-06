@@ -2378,81 +2378,141 @@ body {
   .pos-row-full > :nth-child(n+8) { display: none; }
 }
 
-/* Predictions mobile */
+/* ═══════════════════════════════════════════
+   MOBILE: Predictions (Kalshi/Polymarket style)
+   ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .pred-page { overflow-y: auto; overflow-x: hidden; }
-  .pred-layout { flex-direction: column; padding: 0 16px; overflow: visible; height: auto; }
+  .pred-page { overflow-y: auto; overflow-x: hidden; padding: 4px; gap: 4px; }
+  .pred-layout { flex-direction: column; padding: 0 6px; overflow: visible; height: auto; gap: 8px; }
   .pred-main { overflow: visible !important; flex: none !important; height: auto !important; }
-  .pred-sidebar { width: 100%; flex-direction: column; overflow: visible; }
-  .pred-topbar { width: calc(100% - 16px); overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
+  /* Sidebar stacks below main content */
+  .pred-sidebar { width: 100%; flex-direction: column; overflow: visible; gap: 8px; }
+  /* Topbar: scrollable category pills like Kalshi */
+  .pred-topbar {
+    width: calc(100% - 12px); overflow-x: auto; scrollbar-width: none;
+    flex-wrap: nowrap; padding: 4px 8px; gap: 4px;
+    scroll-snap-type: x mandatory; max-width: none;
+  }
   .pred-topbar::-webkit-scrollbar { display: none; }
-  .pred-topbar-tab { padding: 6px 8px; font-size: 11px; }
+  .pred-topbar-tab { padding: 6px 10px; font-size: 11px; scroll-snap-align: start; }
   .pred-topbar-tab svg { display: none; }
-  .featured-market { flex-direction: column; max-width: 100%; }
-  .featured-book { width: 100%; border-left: none; border-top: 1px solid var(--border); }
-  .pred-grid { grid-template-columns: 1fr 1fr; }
+  /* Featured market: stack vertically, hide orderbook (like Polymarket mobile) */
+  .featured-market { flex-direction: column !important; max-width: 100% !important; }
+  .featured-book { display: none !important; }
+  .featured-title { font-size: 17px; }
+  .featured-left { padding: 14px; gap: 10px; }
+  .featured-bar { height: 28px; font-size: 12px; }
+  /* Trending pills: horizontal scroll */
+  .pred-markets-bar { overflow-x: auto; scrollbar-width: none; padding: 6px 0; }
+  .pred-markets-bar::-webkit-scrollbar { display: none; }
+  .pred-markets-title { font-size: 13px; }
+  /* Market cards: 2-col grid */
+  .pred-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .pred-card { padding: 10px; gap: 8px; }
+  .pred-card-title { font-size: 12px; min-height: 30px; }
+  .pred-card-prices { font-size: 13px; }
+  .pred-card-meta { font-size: 10px; }
+  /* Market detail: stack trade card below */
   .pred-detail { flex-direction: column; overflow-y: auto; }
   .pred-detail-side { width: 100%; }
-  .pred-detail-main { min-height: auto; overflow: visible; }
-  .pred-markets-bar { overflow-x: auto; scrollbar-width: none; }
-  .pred-markets-bar::-webkit-scrollbar { display: none; }
-  .tpsl-modal { width: 95vw; }
+  .pred-detail-main { min-height: auto; overflow: visible; padding: 14px; }
+  .pred-detail-title { font-size: 17px; }
+  .market-detail-stats { gap: 12px; flex-wrap: wrap; }
+  /* Sidebar cards compact */
+  .pred-hot-card { padding: 10px; }
+  .pred-hot-title { font-size: 13px; margin-bottom: 8px; }
+  .pred-hot-row { padding: 5px 0; font-size: 12px; }
+  .pred-mover-row { font-size: 11px; padding: 5px 0; }
+  /* Comments compact */
+  .comment-input { font-size: 12px; padding: 8px 10px; }
+  .comment-text { font-size: 13px; }
+  .comments-tab { font-size: 12px; padding: 6px 12px; }
+  /* TP/SL modal */
+  .tpsl-modal { width: 95vw; padding: 16px; }
 }
 @media (max-width: 480px) {
   .pred-grid { grid-template-columns: 1fr; }
-  .pred-topbar { width: calc(100% - 8px); padding: 4px 6px; }
-  .pred-page { padding: 4px; gap: 4px; }
+  .pred-layout { padding: 0 4px; }
+  .pred-topbar { width: calc(100% - 8px); }
 }
 
-/* Perps small screens: everything stacks */
+/* ═══════════════════════════════════════════
+   MOBILE: Perps
+   ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .perps-page { height: auto; min-height: calc(100vh - 48px); overflow: auto; padding: 6px 16px; }
+  .perps-page { height: auto; min-height: calc(100vh - 48px); overflow: auto; padding: 4px 6px; }
   .perps-main { flex-direction: column; }
-  .perps-top-row { flex-direction: column; min-height: 350px; }
-  .perps-chart-area { border-right: none; border-bottom: 1px solid var(--border); min-height: 300px; }
+  .perps-top-row { flex-direction: column; min-height: 300px; }
+  .perps-chart-area { border-right: none; border-bottom: 1px solid var(--border); min-height: 280px; }
   .perps-book-area { display: none; }
   .perps-trade-area { width: 100%; max-height: none; border-left: none; border-top: 1px solid var(--border); }
   .perps-bottom { max-height: none; min-height: auto; overflow-x: auto; height: auto; }
-  .market-header { flex-wrap: wrap; gap: 12px; }
-  .market-stats { gap: 12px; }
+  /* Compact market header */
+  .market-header { flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+  .market-stats { gap: 8px; flex-wrap: wrap; }
+  .market-stat { min-width: 0; }
+  .market-stat-label { font-size: 9px; }
+  .market-stat-value { font-size: 11px; }
+  .market-name { font-size: 14px; }
+  /* Positions compact */
   .pos-row-full { grid-template-columns: repeat(5, 1fr); font-size: 11px; }
   .pos-row-full > :nth-child(n+6) { display: none; }
+  .pos-tab-bar { flex-direction: column; gap: 4px; }
+  .pos-tabs { overflow-x: auto; scrollbar-width: none; }
+  .pos-tabs::-webkit-scrollbar { display: none; }
+  /* Protocol pages (lending, staking, options) */
+  .protocol-main { flex-direction: column; }
+  .protocol-panel { width: 100%; min-width: auto; border-left: none; border-top: 1px solid var(--border); }
+  .protocol-content { padding: 12px; }
 }
 
+/* ═══════════════════════════════════════════
+   MOBILE: Small phones (< 600px)
+   ═══════════════════════════════════════════ */
 @media (max-width: 600px) {
+  /* Nav: compact, scrollable tabs */
   .nav { padding: 0 8px; }
-  .nav-left { gap: 8px; min-width: 0; }
-  .nav-tabs { overflow-x: auto; scrollbar-width: none; }
+  .nav-left { gap: 6px; min-width: 0; }
+  .nav-tabs { overflow-x: auto; scrollbar-width: none; gap: 0; }
   .nav-tabs::-webkit-scrollbar { display: none; }
-  .nav-tab { padding: 14px 8px; font-size: 11px; white-space: nowrap; }
+  .nav-tab { padding: 12px 8px; font-size: 11px; white-space: nowrap; }
   .logo { font-size: 13px; gap: 5px; white-space: nowrap; flex-shrink: 0; }
   .logo-icon { width: 14px; height: 14px; }
   .nav-right { gap: 6px; flex-shrink: 0; }
-  .connect-btn { padding: 6px 12px; font-size: 11px; }
-  .theme-toggle { width: 28px; height: 28px; }
-  .market-header { padding: 8px 10px; gap: 8px; }
+  .connect-btn { padding: 5px 10px; font-size: 10px; }
+  .theme-toggle { width: 26px; height: 26px; }
+  .deposit-btn { padding: 5px 10px; font-size: 10px; }
+  /* Ticker: hide on mobile */
+  .ticker-bar { display: none; }
+  /* Market header compact */
+  .market-header { padding: 8px 10px; gap: 6px; }
   .market-selector-btn { gap: 6px; }
   .market-name { font-size: 13px; }
-  .market-price { font-size: 12px; }
-  .market-stats { gap: 10px; }
+  .market-stats { gap: 8px; }
   .market-stat-label { font-size: 8px; }
   .market-stat-value { font-size: 10px; }
-  .ticker-bar { display: none; } /* hide ticker on mobile */
-  .trade-panel { padding: 12px; }
-  .acct-summary { padding: 8px 10px; gap: 12px; }
-  .pos-tabs { padding: 0 10px; }
-  .pos-tab { padding: 8px 10px; font-size: 11px; }
-  .pos-row, .bal-row { padding: 6px 10px; font-size: 11px; }
+  /* Trade panel */
+  .trade-panel { padding: 10px; }
+  .trade-type-toggle, .trade-side-toggle { gap: 4px; }
+  /* Positions compact */
+  .pos-tabs { padding: 0 8px; }
+  .pos-tab { padding: 6px 8px; font-size: 11px; }
+  .pos-row, .bal-row { padding: 6px 8px; font-size: 11px; }
   .pos-row-7 { grid-template-columns: 1.5fr 0.8fr 1fr 1.2fr 0.5fr !important; }
   .pos-row-7 > :nth-child(4), .pos-row-7 > :nth-child(6) { display: none; }
-  .mkt-modal { width: 100vw; max-height: 85vh; border-radius: 0; }
+  .pos-balance-inline { display: none; }
+  /* Market selector modal: full screen bottom sheet */
+  .mkt-modal { width: 100vw; max-height: 85vh; border-radius: 12px 12px 0 0; }
   .mkt-overlay { padding-top: 0; align-items: flex-end; }
   .mkt-cols, .mkt-row { grid-template-columns: 24px 2fr 1fr 1.2fr; }
   .mkt-col-header:nth-child(n+5), .mkt-row .mkt-cell:nth-child(n+5) { display: none; }
+  /* Orderbook compact */
   .ob-header, .ob-row { grid-template-columns: 1fr 1fr; }
   .ob-total, .ob-header > :nth-child(3) { display: none; }
   .rt-header, .rt-row { grid-template-columns: 1fr 1fr; }
   .rt-time, .rt-header > :nth-child(3) { display: none; }
+  /* Predictions: single column cards */
+  .pred-card-title { font-size: 12px; }
 }
 
 /* ─── Protocol Pages (Staking, Lending, CDP, Predictions) ─── */
@@ -2624,6 +2684,12 @@ body {
 }
 .pred-topbar-tab svg { flex-shrink: 0; opacity: 0.7; }
 .pred-topbar-tab.active svg { opacity: 1; }
+/* Mobile-only tabs hidden on desktop, More hidden on mobile */
+.pred-mobile-tab { display: none; }
+@media (max-width: 768px) {
+  .pred-mobile-tab { display: flex !important; }
+  .pred-more-wrap { display: none !important; }
+}
 .pred-topbar-tab:hover { color: var(--text-1); background: var(--bg-2); }
 .pred-topbar-tab.active { color: var(--text-0); background: var(--blue-bg); font-weight: 600; }
 

@@ -474,8 +474,14 @@ export function PredictionsPage() {
           {catIcons[c]}{c}
         </button>
       ))}
+      {/* On mobile: show all tabs inline (scrollable). On desktop: "More" dropdown */}
+      {moreCats.map(c => (
+        <button key={c} className={`pred-topbar-tab pred-mobile-tab ${category === c ? 'active' : ''}`} onClick={() => { setCategory(c); setOpenMarketId(null) }}>
+          {c}
+        </button>
+      ))}
       {moreCats.length > 0 && (
-        <div ref={moreRef} style={{ position: 'relative' }}>
+        <div ref={moreRef} style={{ position: 'relative' }} className="pred-more-wrap">
           <button className={`pred-topbar-tab ${isMoreActive ? 'active' : ''}`} onClick={() => setMoreOpen(o => !o)}>
             More
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginLeft: 2, transform: moreOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><path d="M6 9l6 6 6-6"/></svg>

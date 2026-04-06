@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 
 const CATEGORIES = ['Trending', 'Crypto', 'Macro', 'Politics', 'Sports', 'Tech'] as const
 type Category = typeof CATEGORIES[number]
@@ -51,7 +51,7 @@ const HOT_TOPICS = [
 ]
 
 // ── Featured Market (big card with YES/NO book) ──
-function FeaturedMarket({ market, onTrade }: { market: Market; onTrade: () => void }) {
+function FeaturedMarket({ market }: { market: Market }) {
   const yesPct = Math.round(market.yesPrice * 100)
   const noPct = 100 - yesPct
   // Simulate order book levels
@@ -141,7 +141,7 @@ export function PredictionsPage() {
       <div className="pred-layout">
         <div className="pred-main" style={{ padding: 4 }}>
           {/* Featured */}
-          <FeaturedMarket market={featured} onTrade={() => {}} />
+          <FeaturedMarket market={featured} />
 
           {/* Card grid */}
           <div style={{ marginTop: 8 }}>

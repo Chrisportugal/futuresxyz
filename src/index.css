@@ -2381,7 +2381,7 @@ body {
 /* Predictions mobile */
 @media (max-width: 768px) {
   .pred-page { overflow-y: auto; overflow-x: hidden; }
-  .pred-layout { flex-direction: column; padding: 0 8px; overflow: visible; height: auto; }
+  .pred-layout { flex-direction: column; padding: 0 16px; overflow: visible; height: auto; }
   .pred-main { overflow: visible !important; flex: none !important; height: auto !important; }
   .pred-sidebar { width: 100%; flex-direction: column; overflow: visible; }
   .pred-topbar { width: calc(100% - 16px); overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
@@ -2406,7 +2406,7 @@ body {
 
 /* Perps small screens: everything stacks */
 @media (max-width: 768px) {
-  .perps-page { height: auto; min-height: calc(100vh - 48px); overflow: auto; padding: 6px 8px; }
+  .perps-page { height: auto; min-height: calc(100vh - 48px); overflow: auto; padding: 6px 16px; }
   .perps-main { flex-direction: column; }
   .perps-top-row { flex-direction: column; min-height: 350px; }
   .perps-chart-area { border-right: none; border-bottom: 1px solid var(--border); min-height: 300px; }

@@ -1,106 +1,227 @@
 import { useState } from 'react'
 
-const MARKETS = [
-  { asset: 'USDC', supplyApy: '3.2%', borrowApy: '5.1%', totalSupply: '$42.1M', totalBorrow: '$28.3M', utilization: '67%' },
-  { asset: 'HYPE', supplyApy: '1.8%', borrowApy: '4.2%', totalSupply: '$18.7M', totalBorrow: '$8.4M', utilization: '45%' },
-  { asset: 'ETH', supplyApy: '2.1%', borrowApy: '4.8%', totalSupply: '$31.2M', totalBorrow: '$15.6M', utilization: '50%' },
-  { asset: 'BTC', supplyApy: '0.8%', borrowApy: '3.5%', totalSupply: '$55.4M', totalBorrow: '$12.1M', utilization: '22%' },
-  { asset: 'stHYPE', supplyApy: '2.4%', borrowApy: '5.6%', totalSupply: '$9.8M', totalBorrow: '$4.2M', utilization: '43%' },
+type Protocol = 'all' | 'hyperlend' | 'felix'
+
+interface LendingMarket {
+  asset: string
+  protocol: 'HyperLend' | 'Felix'
+  type: 'lending' | 'cdp'
+  supplyApy: string
+  borrowApy: string
+  totalSupply: string
+  totalBorrow: string
+  utilization: string
+  collateral?: boolean
+}
+
+const MARKETS: LendingMarket[] = [
+  // HyperLend markets
+  { asset: 'USDC', protocol: 'HyperLend', type: 'lending', supplyApy: '4.2%', borrowApy: '6.1%', totalSupply: '$82M', totalBorrow: '$54M', utilization: '66%', collateral: true },
+  { asset: 'HYPE', protocol: 'HyperLend', type: 'lending', supplyApy: '2.8%', borrowApy: '5.4%', totalSupply: '$45M', totalBorrow: '$18M', utilization: '40%', collateral: true },
+  { asset: 'uETH', protocol: 'HyperLend', type: 'lending', supplyApy: '1.9%', borrowApy: '4.2%', totalSupply: '$38M', totalBorrow: '$12M', utilization: '32%', collateral: true },
+  { asset: 'uBTC', protocol: 'HyperLend', type: 'lending', supplyApy: '0.8%', borrowApy: '3.1%', totalSupply: '$120M', totalBorrow: '$22M', utilization: '18%', collateral: true },
+  { asset: 'USDe', protocol: 'HyperLend', type: 'lending', supplyApy: '5.1%', borrowApy: '7.8%', totalSupply: '$28M', totalBorrow: '$19M', utilization: '68%', collateral: false },
+  { asset: 'USDT0', protocol: 'HyperLend', type: 'lending', supplyApy: '3.8%', borrowApy: '5.9%', totalSupply: '$35M', totalBorrow: '$21M', utilization: '60%', collateral: false },
+  // Felix CDP markets
+  { asset: 'HYPE', protocol: 'Felix', type: 'cdp', supplyApy: '--', borrowApy: '0.5%', totalSupply: '$62M', totalBorrow: '$28M', utilization: '45%', collateral: true },
+  { asset: 'kHYPE', protocol: 'Felix', type: 'cdp', supplyApy: '--', borrowApy: '0.5%', totalSupply: '$34M', totalBorrow: '$14M', utilization: '41%', collateral: true },
+  { asset: 'uBTC', protocol: 'Felix', type: 'cdp', supplyApy: '--', borrowApy: '0.3%', totalSupply: '$48M', totalBorrow: '$12M', utilization: '25%', collateral: true },
 ]
 
+const PROTOCOL_INFO = {
+  hyperlend: { name: 'HyperLend', url: 'https://app.hyperlend.finance/dashboard', desc: 'Lend & borrow on HyperEVM', tvl: '$348M', markets: 6 },
+  felix: { name: 'Felix', url: 'https://www.usefelix.xyz/portfolio', desc: 'CDP - mint feUSD against collateral', tvl: '$144M', markets: 3 },
+}
+
 export function LendingPage() {
+  const [protocol, setProtocol] = useState<Protocol>('all')
+  const [selectedAsset, setSelectedAsset] = useState<LendingMarket | null>(null)
   const [mode, setMode] = useState<'supply' | 'borrow'>('supply')
-  const [selectedAsset, setSelectedAsset] = useState('USDC')
   const [amount, setAmount] = useState('')
 
-  const market = MARKETS.find(m => m.asset === selectedAsset)!
+  const filtered = protocol === 'all' ? MARKETS : MARKETS.filter(m => m.protocol.toLowerCase() === protocol)
+
+  const hyperlendMarkets = MARKETS.filter(m => m.protocol === 'HyperLend')
+  const felixMarkets = MARKETS.filter(m => m.protocol === 'Felix')
 
   return (
-    <div className="protocol-page">
-      <div className="protocol-main">
-        <div className="protocol-content">
-          <div className="protocol-stats-row">
+    <div className="pred-page">
+      {/* Protocol tabs */}
+      <div className="pred-topbar">
+        <button className={`pred-topbar-tab ${protocol === 'all' ? 'active' : ''}`} onClick={() => setProtocol('all')}>All Markets</button>
+        <button className={`pred-topbar-tab ${protocol === 'hyperlend' ? 'active' : ''}`} onClick={() => setProtocol('hyperlend')}>HyperLend</button>
+        <button className={`pred-topbar-tab ${protocol === 'felix' ? 'active' : ''}`} onClick={() => setProtocol('felix')}>Felix CDP</button>
+      </div>
+
+      <div className="pred-layout">
+        {/* Main: markets */}
+        <div className="pred-main">
+          {/* Protocol stats */}
+          <div className="protocol-stats-row" style={{ marginBottom: 12 }}>
+            {(protocol === 'all' || protocol === 'hyperlend') && (
+              <div className="protocol-stat-card">
+                <span className="protocol-stat-label">HyperLend TVL</span>
+                <span className="protocol-stat-value">{PROTOCOL_INFO.hyperlend.tvl}</span>
+              </div>
+            )}
+            {(protocol === 'all' || protocol === 'felix') && (
+              <div className="protocol-stat-card">
+                <span className="protocol-stat-label">Felix TVL</span>
+                <span className="protocol-stat-value">{PROTOCOL_INFO.felix.tvl}</span>
+              </div>
+            )}
             <div className="protocol-stat-card">
-              <span className="protocol-stat-label">Total Supply</span>
-              <span className="protocol-stat-value">$157.2M</span>
-            </div>
-            <div className="protocol-stat-card">
-              <span className="protocol-stat-label">Total Borrow</span>
-              <span className="protocol-stat-value">$68.6M</span>
-            </div>
-            <div className="protocol-stat-card">
-              <span className="protocol-stat-label">Markets</span>
-              <span className="protocol-stat-value">{MARKETS.length}</span>
-            </div>
-            <div className="protocol-stat-card">
-              <span className="protocol-stat-label">Avg Utilization</span>
-              <span className="protocol-stat-value">45.4%</span>
+              <span className="protocol-stat-label">Total Markets</span>
+              <span className="protocol-stat-value">{filtered.length}</span>
             </div>
           </div>
 
-          <div className="protocol-table-section">
-            <div className="protocol-table-title">Markets</div>
-            <div className="protocol-table">
-              <div className="protocol-table-header">
-                <span>Asset</span>
-                <span>Supply APY</span>
-                <span>Borrow APY</span>
-                <span>Total Supply</span>
-                <span>Total Borrow</span>
-                <span>Utilization</span>
+          {/* HyperLend section */}
+          {(protocol === 'all' || protocol === 'hyperlend') && (
+            <div className="lending-protocol-section">
+              <div className="lending-protocol-header">
+                <span className="lending-protocol-name">HyperLend</span>
+                <span className="lending-protocol-desc">Lend & Borrow</span>
+                <a href={PROTOCOL_INFO.hyperlend.url} target="_blank" rel="noopener noreferrer" className="protocol-action-link">Open App</a>
               </div>
-              {MARKETS.map(m => (
-                <button key={m.asset} className={`protocol-table-row ${m.asset === selectedAsset ? 'active' : ''}`} onClick={() => setSelectedAsset(m.asset)}>
-                  <span className="protocol-cell-name">{m.asset}</span>
-                  <span className="green">{m.supplyApy}</span>
-                  <span>{m.borrowApy}</span>
-                  <span>{m.totalSupply}</span>
-                  <span>{m.totalBorrow}</span>
-                  <span>{m.utilization}</span>
-                </button>
-              ))}
+              <div className="protocol-table">
+                <div className="protocol-table-header" style={{ gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr 0.8fr' }}>
+                  <span>Asset</span>
+                  <span>Supply APY</span>
+                  <span>Borrow APY</span>
+                  <span>Total Supply</span>
+                  <span>Total Borrow</span>
+                  <span>Util.</span>
+                </div>
+                {hyperlendMarkets.map(m => (
+                  <button key={`hl-${m.asset}`} className={`protocol-table-row ${selectedAsset === m ? 'active' : ''}`}
+                    style={{ gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr 0.8fr' }}
+                    onClick={() => { setSelectedAsset(m); setMode('supply'); setAmount('') }}>
+                    <span className="protocol-cell-name">{m.asset} {m.collateral && <span className="lending-collateral-badge">C</span>}</span>
+                    <span className="green">{m.supplyApy}</span>
+                    <span>{m.borrowApy}</span>
+                    <span>{m.totalSupply}</span>
+                    <span>{m.totalBorrow}</span>
+                    <span>{m.utilization}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Felix section */}
+          {(protocol === 'all' || protocol === 'felix') && (
+            <div className="lending-protocol-section">
+              <div className="lending-protocol-header">
+                <span className="lending-protocol-name">Felix</span>
+                <span className="lending-protocol-desc">CDP - Mint feUSD</span>
+                <a href={PROTOCOL_INFO.felix.url} target="_blank" rel="noopener noreferrer" className="protocol-action-link">Open App</a>
+              </div>
+              <div className="protocol-table">
+                <div className="protocol-table-header" style={{ gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr 0.8fr' }}>
+                  <span>Collateral</span>
+                  <span>Supply APY</span>
+                  <span>Mint Fee</span>
+                  <span>Deposited</span>
+                  <span>feUSD Minted</span>
+                  <span>Util.</span>
+                </div>
+                {felixMarkets.map(m => (
+                  <button key={`fx-${m.asset}`} className={`protocol-table-row ${selectedAsset === m ? 'active' : ''}`}
+                    style={{ gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr 0.8fr' }}
+                    onClick={() => { setSelectedAsset(m); setMode('supply'); setAmount('') }}>
+                    <span className="protocol-cell-name">{m.asset}</span>
+                    <span className="green">{m.supplyApy}</span>
+                    <span>{m.borrowApy}</span>
+                    <span>{m.totalSupply}</span>
+                    <span>{m.totalBorrow}</span>
+                    <span>{m.utilization}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="protocol-panel">
-          <div className="protocol-panel-title">{selectedAsset}</div>
-          <div className="protocol-panel-sub">Powered by HyperLend</div>
+        {/* Right sidebar */}
+        <div className="pred-sidebar">
+          {selectedAsset ? (
+            <div className="pred-trade-card">
+              <div className="pred-trade-title">{selectedAsset.asset}</div>
+              <div className="protocol-panel-sub">via {selectedAsset.protocol}</div>
 
-          <div className="trade-type-toggle">
-            <button className={`trade-type-btn ${mode === 'supply' ? 'active' : ''}`} onClick={() => setMode('supply')}>Supply</button>
-            <button className={`trade-type-btn ${mode === 'borrow' ? 'active' : ''}`} onClick={() => setMode('borrow')}>Borrow</button>
+              {selectedAsset.type === 'lending' ? (
+                <>
+                  <div className="trade-type-toggle">
+                    <button className={`trade-type-btn ${mode === 'supply' ? 'active' : ''}`} onClick={() => setMode('supply')}>Supply</button>
+                    <button className={`trade-type-btn ${mode === 'borrow' ? 'active' : ''}`} onClick={() => setMode('borrow')}>Borrow</button>
+                  </div>
+                  <div className="trade-input-group">
+                    <div className="tp-info-row" style={{ marginBottom: 4 }}>
+                      <span>Amount</span>
+                      <span>Balance: 0.00 {selectedAsset.asset}</span>
+                    </div>
+                    <div className="trade-input-wrapper">
+                      <input type="number" className="trade-input" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} step="any" />
+                      <span className="trade-input-unit">{selectedAsset.asset}</span>
+                    </div>
+                  </div>
+                  <div className="tp-summary">
+                    <div className="tp-summary-row">
+                      <span>{mode === 'supply' ? 'Supply APY' : 'Borrow APY'}</span>
+                      <span className={mode === 'supply' ? 'green' : ''}>{mode === 'supply' ? selectedAsset.supplyApy : selectedAsset.borrowApy}</span>
+                    </div>
+                    <div className="tp-summary-row"><span>Utilization</span><span>{selectedAsset.utilization}</span></div>
+                    <div className="tp-summary-row"><span>Collateral</span><span>{selectedAsset.collateral ? 'Yes' : 'No'}</span></div>
+                  </div>
+                  <a href={PROTOCOL_INFO.hyperlend.url} target="_blank" rel="noopener noreferrer"
+                    className={`trade-submit ${mode === 'supply' ? 'buy' : 'sell'}`}
+                    style={{ textAlign: 'center', textDecoration: 'none', display: 'block' }}>
+                    {mode === 'supply' ? 'Supply' : 'Borrow'} on HyperLend
+                  </a>
+                </>
+              ) : (
+                <>
+                  <div className="trade-input-group">
+                    <div className="tp-info-row" style={{ marginBottom: 4 }}>
+                      <span>Collateral</span>
+                      <span>Balance: 0.00 {selectedAsset.asset}</span>
+                    </div>
+                    <div className="trade-input-wrapper">
+                      <input type="number" className="trade-input" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} step="any" />
+                      <span className="trade-input-unit">{selectedAsset.asset}</span>
+                    </div>
+                  </div>
+                  <div className="tp-summary">
+                    <div className="tp-summary-row"><span>Mint Fee</span><span>{selectedAsset.borrowApy}</span></div>
+                    <div className="tp-summary-row"><span>Min Coll. Ratio</span><span>150%</span></div>
+                    <div className="tp-summary-row"><span>You mint</span><span>{amount ? `${(parseFloat(amount) * 0.6).toFixed(2)} feUSD` : '0.00 feUSD'}</span></div>
+                  </div>
+                  <a href={PROTOCOL_INFO.felix.url} target="_blank" rel="noopener noreferrer"
+                    className="trade-submit buy" style={{ textAlign: 'center', textDecoration: 'none', display: 'block' }}>
+                    Mint feUSD on Felix
+                  </a>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="pred-hot-card" style={{ textAlign: 'center', padding: 20 }}>
+              <div style={{ color: 'var(--text-3)', fontSize: 13 }}>Select a market to supply or borrow</div>
+            </div>
+          )}
+
+          {/* Protocol links */}
+          <div className="pred-hot-card">
+            <div className="pred-hot-title">Protocols</div>
+            <a href={PROTOCOL_INFO.hyperlend.url} target="_blank" rel="noopener noreferrer" className="pred-hot-row" style={{ textDecoration: 'none' }}>
+              <span className="pred-hot-name">HyperLend</span>
+              <span className="pred-hot-vol">{PROTOCOL_INFO.hyperlend.tvl} TVL</span>
+            </a>
+            <a href={PROTOCOL_INFO.felix.url} target="_blank" rel="noopener noreferrer" className="pred-hot-row" style={{ textDecoration: 'none' }}>
+              <span className="pred-hot-name">Felix</span>
+              <span className="pred-hot-vol">{PROTOCOL_INFO.felix.tvl} TVL</span>
+            </a>
           </div>
-
-          <div className="trade-input-group">
-            <div className="tp-info-row" style={{ marginBottom: 4 }}>
-              <span>Amount</span>
-              <span>Balance: 0.00 {selectedAsset}</span>
-            </div>
-            <div className="trade-input-wrapper">
-              <input type="number" className="trade-input" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} step="any" />
-              <span className="trade-input-unit">{selectedAsset}</span>
-            </div>
-          </div>
-
-          <div className="tp-summary">
-            <div className="tp-summary-row">
-              <span>{mode === 'supply' ? 'Supply APY' : 'Borrow APY'}</span>
-              <span className={mode === 'supply' ? 'green' : ''}>{mode === 'supply' ? market.supplyApy : market.borrowApy}</span>
-            </div>
-            <div className="tp-summary-row">
-              <span>Utilization</span>
-              <span>{market.utilization}</span>
-            </div>
-            <div className="tp-summary-row">
-              <span>Total {mode === 'supply' ? 'Supply' : 'Borrow'}</span>
-              <span>{mode === 'supply' ? market.totalSupply : market.totalBorrow}</span>
-            </div>
-          </div>
-
-          <a href="https://app.hyperlend.finance/dashboard" target="_blank" rel="noopener noreferrer" className={`trade-submit ${mode === 'supply' ? 'buy' : 'sell'}`} style={{ textAlign: 'center', textDecoration: 'none', display: 'block' }}>
-            {mode === 'supply' ? `Supply ${selectedAsset}` : `Borrow ${selectedAsset}`} on HyperLend
-          </a>
         </div>
       </div>
     </div>

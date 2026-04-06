@@ -73,6 +73,17 @@ function SpotChart({ coin, theme }: { coin: string; theme: 'dark' | 'light' }) {
 function SpotSelector({ markets, selected, onSelect }: { markets: SpotMarket[]; selected: string; onSelect: (name: string) => void }) {
   const [search, setSearch] = useState('')
   const [open, setOpen] = useState(false)
+  const dropRef = useRef<HTMLDivElement>(null)
+
+  // Click outside to close
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
   const PINNED = new Set(['BTC', 'ETH', 'SOL', 'HYPE'])
   const filtered = useMemo(() => {
     const matched = markets.filter(m => m.baseToken.toLowerCase().includes(search.toLowerCase()) || m.pairName.toLowerCase().includes(search.toLowerCase()))
@@ -82,7 +93,7 @@ function SpotSelector({ markets, selected, onSelect }: { markets: SpotMarket[]; 
   }, [markets, search])
 
   return (
-    <div className="spot-selector">
+    <div className="spot-selector" ref={dropRef}>
       <button className="market-selector-btn" onClick={() => setOpen(!open)}>
         <span className="market-name">{selected}</span>
         <span className="market-arrow">{open ? '▲' : '▼'}</span>

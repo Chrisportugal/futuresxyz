@@ -2383,6 +2383,29 @@ body {
 .green { color: var(--green); }
 .red { color: var(--red); }
 
+/* Lending protocol sections */
+.lending-protocol-section { margin-bottom: 16px; }
+.lending-protocol-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+.lending-protocol-name { font-size: 15px; font-weight: 700; color: var(--text-0); }
+.lending-protocol-desc { font-size: 12px; color: var(--text-3); margin-right: auto; }
+.lending-collateral-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--green);
+  background: var(--green-bg);
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
 /* Light theme: glass protocol pages */
 [data-theme="light"] .protocol-panel {
   background: rgba(255,255,255,0.4);

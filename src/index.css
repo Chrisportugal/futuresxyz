@@ -2701,7 +2701,6 @@ body {
 .perps-desktop-only { display: contents; }
 
 @media (max-width: 768px) {
-  /* Hide desktop nav and show mobile shell */
   .nav { display: none !important; }
   .perps-desktop-only { display: none !important; }
   .perps-mobile-hl {
@@ -2710,359 +2709,374 @@ body {
     z-index: 10;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    padding: 0;
     background: #0d141a;
     overflow: hidden;
   }
-  .perps-mobile-topbar {
+
+  /* ── Root shell ── */
+  .mhl-root {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+  .mhl-content {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Bottom nav ── */
+  .mhl-bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
     background: #121c23;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 6px 2px calc(6px + env(safe-area-inset-bottom));
+    flex-shrink: 0;
   }
-  .perps-mobile-brand,
-  .perps-mobile-actions {
+  .mhl-nav-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 3px;
+    background: none;
+    border: none;
+    color: var(--text-2);
+    font-size: 10px;
+    font-family: var(--font);
+    padding: 4px 2px;
+    cursor: pointer;
   }
-  .perps-mobile-wordmark {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .perps-mobile-logo-dot {
-    width: 14px;
-    height: 24px;
-    border-radius: 999px;
-    background: #f5f7fa;
-  }
-  .perps-mobile-logo-dot:first-child,
-  .perps-mobile-logo-dot:last-child {
-    width: 10px;
-    height: 10px;
-    background: #8ee6d7;
-  }
-  .perps-mobile-icon-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: transparent;
-    color: var(--text-0);
+  .mhl-nav-item.active { color: #72d3c8; }
+  .mhl-icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-1);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3px;
-    padding: 0;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 8px;
   }
-  .perps-mobile-icon-btn span {
-    display: block;
-    width: 18px;
-    height: 2px;
-    background: currentColor;
-    border-radius: 999px;
+  .mhl-icon-btn.starred { color: #f5c842; }
+
+  /* ── Home tab ── */
+  .mhl-home {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #0d141a;
   }
-  .perps-mobile-hl .connect-btn,
-  .perps-mobile-hl .connect-btn.connected {
-    min-width: 116px;
-    height: 40px;
-    padding: 0 14px;
-    border-radius: 14px;
-    font-size: 13px;
-    background: #1f4f46;
+  .mhl-home-header {
+    padding: 14px 16px 8px;
+    flex-shrink: 0;
+  }
+  .mhl-home-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-0);
+  }
+  .mhl-home-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0;
+    padding: 6px 16px;
+    font-size: 11px;
+    color: var(--text-3);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
+  .mhl-home-col-right { text-align: right; }
+  .mhl-home-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .mhl-home-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: center;
+    gap: 0;
+    padding: 10px 16px;
+    background: none;
     border: none;
-    color: #d7efe8;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
   }
-  .perps-mobile-marketbar {
+  .mhl-home-row-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .mhl-home-row-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .mhl-home-row-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-0);
+    white-space: nowrap;
+  }
+  .mhl-home-row-sub {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .mhl-home-row-price {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-0);
+    text-align: right;
+  }
+  .mhl-home-row-change {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: right;
+    min-width: 56px;
+  }
+  .mhl-home-row-change.pos { color: var(--green); }
+  .mhl-home-row-change.neg { color: var(--red); }
+
+  /* ── Trade tab ── */
+  .mhl-trade {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #0d141a;
+  }
+  .mhl-trade-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    padding: 14px 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 10px 12px;
     background: #121c23;
-  }
-  .perps-mobile-marketbar-left {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .perps-mobile-hl .market-selector-btn {
-    width: auto;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 0;
-  }
-  .perps-mobile-hl .market-name {
-    font-size: 18px;
-    font-weight: 500;
-  }
-  .perps-mobile-hl .market-arrow {
-    font-size: 10px;
-    color: var(--text-2);
-  }
-  .perps-mobile-market-type {
-    font-size: 12px;
-    color: #72d3c8;
-    padding-left: 32px;
-  }
-  .perps-mobile-marketbar-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     flex-shrink: 0;
   }
-  .perps-mobile-market-price {
-    color: var(--text-0);
-    font-size: 20px;
+  .mhl-trade-header-left {
+    display: flex;
+    align-items: center;
+  }
+  .mhl-trade-header-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .mhl-trade-price {
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: -0.02em;
   }
-  .perps-mobile-market-change {
-    font-size: 13px;
-    font-weight: 500;
+  /* Trade split body */
+  .mhl-trade-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
-  .perps-mobile-surface-tabs {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  .mhl-trade-form-col {
+    width: 55%;
+    min-width: 0;
+    overflow-y: auto;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    background: #0d141a;
+  }
+  .mhl-trade-form-col .trade-panel {
+    padding: 10px 10px;
+  }
+  .mhl-trade-form-col .trade-panel .tp-leverage-row,
+  .mhl-trade-form-col .trade-panel .trade-leverage-labels {
+    display: none;
+  }
+  .mhl-trade-book-col {
+    width: 45%;
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #0d141a;
+  }
+  .mhl-trade-book-col .orderbook {
+    height: 100%;
+    font-size: 11px;
+  }
+  .mhl-trade-book-col .ob-header { padding: 6px 6px 4px; }
+  .mhl-trade-book-col .ob-row { padding: 2px 6px; }
+  .mhl-trade-book-col .ob-spread { padding: 3px 6px; font-size: 11px; }
+  /* Positions strip */
+  .mhl-pos-tabs {
+    display: flex;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     background: #121c23;
+    flex-shrink: 0;
   }
-  .perps-mobile-surface-tab {
+  .mhl-pos-tab {
+    flex: 1;
+    padding: 9px 4px;
+    background: none;
     border: none;
-    background: transparent;
-    color: var(--text-2);
-    padding: 14px 8px 12px;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: var(--font);
     border-bottom: 2px solid transparent;
+    color: var(--text-2);
+    font-size: 11px;
+    font-family: var(--font);
+    cursor: pointer;
+    white-space: nowrap;
   }
-  .perps-mobile-surface-tab.active {
+  .mhl-pos-tab.active {
     color: var(--text-0);
     border-bottom-color: #72d3c8;
   }
-  .perps-mobile-surface {
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    background: #10191f;
-    /* bottom padding handled by the fixed bottom nav — shells must scroll within their own area */
-  }
-  .perps-mobile-chart-shell,
-  .perps-mobile-book-shell,
-  .perps-mobile-trades-shell {
-    height: 100%;
-    min-height: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .perps-mobile-book-shell,
-  .perps-mobile-trades-shell {
-    padding-bottom: 74px;
+  .mhl-pos-content {
+    max-height: 140px;
     overflow-y: auto;
+    flex-shrink: 0;
+    background: #0d141a;
   }
-  .perps-mobile-chart-shell {
-    /* chart's own scroll is handled inside, bottom nav clearance via wrapper padding */
-    padding-bottom: 74px;
-  }
-  .perps-mobile-hl .chart-container {
-    height: 100%;
-  }
-  .perps-mobile-hl .chart-controls {
-    gap: 10px;
-    padding: 12px 14px;
-    border-bottom-color: rgba(255, 255, 255, 0.05);
-  }
-  .perps-mobile-hl .chart-interval {
-    padding: 0;
-    background: transparent;
-    font-size: 16px;
-    color: #cdd4df;
-  }
-  .perps-mobile-hl .chart-interval.active {
-    background: transparent;
-    color: #72d3c8;
-  }
-  .perps-mobile-hl .chart-wrapper {
-    height: calc(100% - 49px);
-    min-height: 0;
-  }
-  .perps-mobile-book-shell .orderbook,
-  .perps-mobile-trades-shell .recent-trades {
-    height: 100%;
-  }
-  .perps-mobile-trades-shell .recent-trades {
-    display: flex;
-    flex-direction: column;
-  }
-  .perps-mobile-trades-shell .rt-body {
+  .mhl-pos-content .positions { min-height: 0; }
+
+  /* ── Chart view ── */
+  .mhl-chart-view {
     flex: 1;
-    overflow-y: auto;
-  }
-  .perps-mobile-bottomnav {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 30;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    background: #121c23;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
-  }
-  .perps-mobile-bottomitem {
-    border: none;
-    background: transparent;
-    color: var(--text-1);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    background: #0d141a;
+  }
+  .mhl-chart-header {
+    display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #121c23;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+  }
+  .mhl-chart-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-0);
+  }
+  .mhl-chart-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    background: #121c23;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
+  .mhl-chart-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+    border-right: 1px solid rgba(255,255,255,0.04);
+  }
+  .mhl-chart-stat:nth-child(3n) { border-right: none; }
+  .mhl-chart-stat-label {
+    font-size: 10px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .mhl-chart-stat-val {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-0);
+  }
+  .mhl-chart-canvas {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .mhl-chart-canvas .chart-container { height: 100%; }
+  .mhl-chart-canvas .chart-wrapper { height: calc(100% - 49px); min-height: 0; }
+  .mhl-chart-tabs {
+    display: flex;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: #121c23;
+    flex-shrink: 0;
+  }
+  .mhl-chart-tab {
+    flex: 1;
+    padding: 10px 4px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-2);
     font-size: 12px;
     font-family: var(--font);
-    padding: 6px 4px;
+    cursor: pointer;
   }
-  .perps-mobile-bottomitem.active {
-    color: #72d3c8;
+  .mhl-chart-tab.active {
+    color: var(--text-0);
+    border-bottom-color: #72d3c8;
   }
-  .perps-mobile-bottomicon {
-    position: relative;
-    display: block;
-    width: 20px;
-    height: 20px;
+  .mhl-chart-book {
+    height: 160px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    background: #0d141a;
   }
-  .perps-mobile-bottomicon.bars::before,
-  .perps-mobile-bottomicon.bars::after,
-  .perps-mobile-bottomicon.bars {
-    background: transparent;
-  }
-  .perps-mobile-bottomicon.bars::before,
-  .perps-mobile-bottomicon.bars::after {
-    content: '';
-    position: absolute;
-    left: 3px;
-    width: 4px;
-    border-radius: 999px;
-    background: currentColor;
-  }
-  .perps-mobile-bottomicon.bars::before { height: 14px; bottom: 1px; }
-  .perps-mobile-bottomicon.bars::after { height: 10px; left: 9px; bottom: 1px; }
-  .perps-mobile-bottomicon.bars { box-shadow: inset -3px -6px 0 0 currentColor; border-radius: 999px; width: 15px; }
-  .perps-mobile-bottomicon.trade {
-    border-radius: 999px;
-    border: 2px solid currentColor;
-  }
-  .perps-mobile-bottomicon.trade::after {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    background: currentColor;
-    left: 4px;
-    top: 4px;
-  }
-  .perps-mobile-bottomicon.account {
-    border-radius: 999px;
-    border: 2px solid currentColor;
-  }
-  .perps-mobile-bottomicon.account::before,
-  .perps-mobile-bottomicon.account::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background: currentColor;
-    border-radius: 999px;
-  }
-  .perps-mobile-bottomicon.account::before {
-    width: 6px;
-    height: 6px;
-    top: 3px;
-  }
-  .perps-mobile-bottomicon.account::after {
-    width: 10px;
-    height: 5px;
-    bottom: 3px;
-  }
-  .perps-mobile-sheet-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(3, 8, 13, 0.64);
-    z-index: 40;
-    display: flex;
-    align-items: flex-end;
-  }
-  .perps-mobile-sheet {
-    width: 100%;
-    max-height: 76vh;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+  .mhl-chart-book .orderbook,
+  .mhl-chart-book .recent-trades { height: 100%; font-size: 11px; }
+  /* Sticky buy/sell footer */
+  .mhl-chart-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
     background: #121c23;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
   }
-  .perps-mobile-sheet-handle {
-    width: 44px;
-    height: 5px;
+  .mhl-buy-btn {
+    padding: 14px 0;
+    background: var(--green);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font);
     border: none;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.22);
-    margin: 10px auto 6px;
-    padding: 0;
+    border-radius: 10px;
+    cursor: pointer;
   }
-  .perps-mobile-sheet-content {
-    min-height: 0;
-    overflow: auto;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  .mhl-sell-btn {
+    padding: 14px 0;
+    background: var(--red);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
   }
-  .perps-mobile-sheet .trade-panel {
-    padding: 14px;
-  }
-  .perps-mobile-sheet .positions {
-    min-height: 420px;
-  }
+
+  /* Override inner component padding in trade col */
+  .mhl-trade-form-col .tp-tabs { padding: 0 10px; }
+  .mhl-trade-form-col .tp-side-row { padding: 0; }
+  .mhl-trade-form-col .trade-buy-btn,
+  .mhl-trade-form-col .trade-sell-btn { font-size: 12px; padding: 9px 4px; }
+  .mhl-trade-form-col .tp-info-row { font-size: 11px; }
+  .mhl-trade-form-col .tp-input { font-size: 13px; }
+  .mhl-trade-form-col .tp-input-wrap { padding: 8px 8px; }
+  .mhl-trade-form-col .tp-label { font-size: 11px; }
+  .mhl-trade-form-col .tp-summary { padding: 0 10px 8px; }
 }
 
-@media (max-width: 480px) {
-  .perps-mobile-topbar {
-    padding: 8px 10px;
-  }
-  .perps-mobile-hl .connect-btn,
-  .perps-mobile-hl .connect-btn.connected {
-    min-width: 98px;
-    font-size: 12px;
-  }
-  .perps-mobile-marketbar {
-    padding: 12px;
-  }
-  .perps-mobile-hl .market-name {
-    font-size: 16px;
-  }
-  .perps-mobile-market-price {
-    font-size: 18px;
-  }
-  .perps-mobile-hl .chart-controls {
-    padding: 10px 12px;
-    gap: 8px;
-  }
-  .perps-mobile-hl .chart-interval {
-    font-size: 15px;
-  }
-}
 .protocol-main { flex: 1; display: flex; overflow: hidden; }
 .protocol-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 .protocol-panel {

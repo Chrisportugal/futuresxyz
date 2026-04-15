@@ -2696,15 +2696,15 @@ body {
 /* ─── Protocol Pages (Staking, Lending, CDP, Predictions) ─── */
 .protocol-page { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
+/* ── Mobile: show mobile layout, hide desktop layout + nav ── */
+.perps-mobile-hl { display: none; }
+.perps-desktop-only { display: contents; }
+
 @media (max-width: 768px) {
-  body.perps-mobile-active .nav {
-    display: none;
-  }
-  body.perps-mobile-active #root,
-  body.perps-mobile-active .app {
-    height: 100vh;
-  }
-  .perps-page-mobile-hl {
+  /* Hide desktop nav and show mobile shell */
+  .nav { display: none !important; }
+  .perps-desktop-only { display: none !important; }
+  .perps-mobile-hl {
     position: fixed;
     inset: 0;
     z-index: 10;
@@ -2767,8 +2767,8 @@ body {
     background: currentColor;
     border-radius: 999px;
   }
-  .perps-page-mobile-hl .connect-btn,
-  .perps-page-mobile-hl .connect-btn.connected {
+  .perps-mobile-hl .connect-btn,
+  .perps-mobile-hl .connect-btn.connected {
     min-width: 116px;
     height: 40px;
     padding: 0 14px;
@@ -2794,17 +2794,17 @@ body {
     flex-direction: column;
     gap: 4px;
   }
-  .perps-page-mobile-hl .market-selector-btn {
+  .perps-mobile-hl .market-selector-btn {
     width: auto;
     justify-content: flex-start;
     gap: 10px;
     padding: 0;
   }
-  .perps-page-mobile-hl .market-name {
+  .perps-mobile-hl .market-name {
     font-size: 18px;
     font-weight: 500;
   }
-  .perps-page-mobile-hl .market-arrow {
+  .perps-mobile-hl .market-arrow {
     font-size: 10px;
     color: var(--text-2);
   }
@@ -2875,25 +2875,25 @@ body {
     /* chart's own scroll is handled inside, bottom nav clearance via wrapper padding */
     padding-bottom: 74px;
   }
-  .perps-page-mobile-hl .chart-container {
+  .perps-mobile-hl .chart-container {
     height: 100%;
   }
-  .perps-page-mobile-hl .chart-controls {
+  .perps-mobile-hl .chart-controls {
     gap: 10px;
     padding: 12px 14px;
     border-bottom-color: rgba(255, 255, 255, 0.05);
   }
-  .perps-page-mobile-hl .chart-interval {
+  .perps-mobile-hl .chart-interval {
     padding: 0;
     background: transparent;
     font-size: 16px;
     color: #cdd4df;
   }
-  .perps-page-mobile-hl .chart-interval.active {
+  .perps-mobile-hl .chart-interval.active {
     background: transparent;
     color: #72d3c8;
   }
-  .perps-page-mobile-hl .chart-wrapper {
+  .perps-mobile-hl .chart-wrapper {
     height: calc(100% - 49px);
     min-height: 0;
   }
@@ -3041,25 +3041,25 @@ body {
   .perps-mobile-topbar {
     padding: 8px 10px;
   }
-  .perps-page-mobile-hl .connect-btn,
-  .perps-page-mobile-hl .connect-btn.connected {
+  .perps-mobile-hl .connect-btn,
+  .perps-mobile-hl .connect-btn.connected {
     min-width: 98px;
     font-size: 12px;
   }
   .perps-mobile-marketbar {
     padding: 12px;
   }
-  .perps-page-mobile-hl .market-name {
+  .perps-mobile-hl .market-name {
     font-size: 16px;
   }
   .perps-mobile-market-price {
     font-size: 18px;
   }
-  .perps-page-mobile-hl .chart-controls {
+  .perps-mobile-hl .chart-controls {
     padding: 10px 12px;
     gap: 8px;
   }
-  .perps-page-mobile-hl .chart-interval {
+  .perps-mobile-hl .chart-interval {
     font-size: 15px;
   }
 }
